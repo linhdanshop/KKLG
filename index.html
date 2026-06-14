@@ -70,6 +70,16 @@
     .hide{display:none!important}
     .muted{color:#666;font-size:13px}
     .fileName{font-size:12px;color:#444;max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+    .loginModal{position:fixed;inset:0;background:rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center;z-index:9999}
+    .loginCard{width:430px;background:#fff;border:2px solid #333;border-radius:10px;padding:16px;box-shadow:0 8px 30px rgba(0,0,0,.25)}
+    .loginTitle{text-align:center;font-size:24px;font-weight:900;margin-bottom:12px;color:#b00000}
+    .loginLine{display:flex;gap:8px;margin-bottom:10px;align-items:center}
+    .loginLine input{flex:1;height:38px;font-size:18px}
+    .staffGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+    .staffGrid button{font-size:18px;height:42px;background:#f6fff3;border-color:#62a35c;color:#176417}
+    .loginNote{margin-top:10px;font-size:13px;color:#555;text-align:center}
+    .roleBadge{font-weight:800;color:#0b5394}
   </style>
 </head>
 <body>
@@ -81,14 +91,31 @@
       <button class="tabBtn disabled" id="tabLamGia" title="Tab làm giá sẽ làm sau">LÀM GIÁ</button>
     </div>
     <div class="authBox">
-      <span id="loginStatus" class="muted">Chưa cấu hình Firebase</span>
-      <button id="loginBtn" class="primary hide">Đăng nhập</button>
+      <span id="loginStatus" class="muted">Chưa đăng nhập</span>
+      <button id="openLoginBtn" class="primary">Đăng nhập</button>
       <button id="logoutBtn" class="hide">Thoát</button>
     </div>
   </div>
 
   <div id="configMsg" class="msg">
-    Chưa dán Firebase config. Web vẫn test được trên máy này bằng localStorage, nhưng muốn lưu chung nhiều máy thì dán config ở đầu file HTML.
+    Chọn Admin hoặc nhân viên để vào web. Bản này dùng mật khẩu nội bộ + Firebase Anonymous, không dùng Google login.
+  </div>
+
+  <div id="loginModal" class="loginModal hide">
+    <div class="loginCard">
+      <div class="loginTitle">ĐĂNG NHẬP</div>
+      <div class="loginLine">
+        <input id="adminPass" type="password" placeholder="Mật khẩu Admin" autocomplete="current-password" />
+        <button id="adminLoginBtn" class="primary">Admin</button>
+      </div>
+      <div class="muted" style="text-align:center;font-weight:700">Nhân viên nhấp tên là vào</div>
+      <div class="staffGrid">
+        <button data-staff="An">An</button>
+        <button data-staff="Nguyệt">Nguyệt</button>
+        <button data-staff="Thủy">Thủy</button>
+      </div>
+      <div class="loginNote">Admin được nhập Excel / xuất Excel / xóa ngày. Nhân viên chỉ kiểm kê và lọc danh sách.</div>
+    </div>
   </div>
 
   <div class="layout">
@@ -196,13 +223,10 @@ const firebaseConfig = {
   appId: "1:394170018971:web:8bd55930397bf93b442a3e"
 };
 
-// Sửa nhanh danh sách email được vào web. Bảo mật chính vẫn nên set ở Firebase Rules.
-const ALLOWED_EMAILS = [
-  "kythuatlado@gmail.com",
-  "tranan180393@gmail.com",
-  "tranvanan180393@gmail.com",
-  "kianprao102@gmail.com"
-];
+// Đăng nhập nội bộ.
+// Admin nhập mật khẩu, nhân viên nhấp tên là vào.
+const ADMIN_PASSWORD = "@N12345678";
+const STAFF_NAMES = ["An", "Nguyệt", "Thủy"];
 
 const DB_ROOT = "kiemke_lamgia";
 
@@ -210,6 +234,7 @@ let db = null;
 let auth = null;
 let firebaseReady = false;
 let currentUser = null;
+let appUser = null; // {role:'admin'|'staff', name:'...'}
 
 const state = {
   dateKey: "",
@@ -284,49 +309,89 @@ function setStatus(text, isError=false){
   box.className = isError ? 'msg error' : 'msg';
 }
 
+function readSavedAppUser(){
+  try{ return JSON.parse(localStorage.getItem('KKLG_APP_USER') || 'null'); }
+  catch(e){ return null; }
+}
+function saveAppUser(user){
+  appUser = user;
+  if(user) localStorage.setItem('KKLG_APP_USER', JSON.stringify(user));
+  else localStorage.removeItem('KKLG_APP_USER');
+}
+function openLogin(){ el('loginModal').classList.remove('hide'); setTimeout(()=>el('adminPass').focus(), 50); }
+function closeLogin(){ el('loginModal').classList.add('hide'); }
+function applyPermissionUI(){
+  const isAdmin = appUser && appUser.role === 'admin';
+  const excelLabel = document.querySelector('label[for="excelInput"]');
+  if(excelLabel) excelLabel.classList.toggle('hide', !isAdmin);
+  el('exportBtn').classList.toggle('hide', !isAdmin);
+  el('deleteDateBtn').classList.toggle('hide', !isAdmin);
+}
+function afterAppLogin(){
+  if(!appUser) return;
+  const name = appUser.role === 'admin' ? 'Admin' : appUser.name;
+  el('loginStatus').innerHTML = `<span class="roleBadge">${escapeHtml(name)}</span>`;
+  el('openLoginBtn').classList.add('hide');
+  el('logoutBtn').classList.remove('hide');
+  closeLogin();
+  applyPermissionUI();
+  loadSnapshot();
+}
+async function loginAs(user){
+  if(!firebaseReady || !auth){
+    saveAppUser(user);
+    afterAppLogin();
+    return;
+  }
+  try{
+    setStatus('Đang đăng nhập Firebase ẩn danh...');
+    saveAppUser(user);
+    await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+    if(!auth.currentUser){
+      await auth.signInAnonymously();
+    }else{
+      currentUser = auth.currentUser;
+      afterAppLogin();
+    }
+  }catch(err){
+    console.error(err);
+    saveAppUser(null);
+    setStatus('Lỗi đăng nhập: ' + (err.code || '') + ' - ' + (err.message || err) + '. Vào Authentication > Sign-in method bật Anonymous.', true);
+    openLogin();
+  }
+}
 function initFirebase(){
   const isPlaceholder = !firebaseConfig.apiKey || firebaseConfig.apiKey.includes('DAN_') || firebaseConfig.projectId.includes('DAN_');
   if(isPlaceholder){
     firebaseReady = false;
     el('loginStatus').textContent = 'Local test';
+    setStatus('Chưa dán Firebase config. Web vẫn test được trên máy này bằng localStorage.');
+    openLogin();
     return;
   }
   firebase.initializeApp(firebaseConfig);
   db = firebase.database();
   auth = firebase.auth();
-  auth.useDeviceLanguage();
   firebaseReady = true;
-  el('loginBtn').classList.remove('hide');
-  setStatus('Firebase đã cấu hình. Đăng nhập Google để lưu và đọc dữ liệu dùng chung nhiều máy.');
+  el('openLoginBtn').classList.remove('hide');
+  setStatus('Firebase đã cấu hình. Bản này dùng Admin mật khẩu + nhân viên nhấp chọn, không dùng Google login.');
 
-  // V3: dùng Redirect thay vì Popup để chạy ổn trên điện thoại/GitHub Pages.
-  auth.getRedirectResult().catch((err) => {
-    console.error(err);
-    setStatus('Lỗi đăng nhập: ' + (err.code || '') + ' - ' + (err.message || err), true);
-  });
-
+  appUser = readSavedAppUser();
   auth.onAuthStateChanged((user) => {
     currentUser = user;
-    if(user){
-      const email = (user.email || '').toLowerCase();
-      const allowed = ALLOWED_EMAILS.map(x=>x.toLowerCase());
-      if(ALLOWED_EMAILS.length && !allowed.includes(email) && !ALLOWED_EMAILS[0].includes('example.com')){
-        el('loginStatus').textContent = `Không cho phép: ${email}`;
-        auth.signOut();
-        return;
-      }
-      el('loginStatus').textContent = email;
-      el('loginBtn').classList.add('hide');
-      el('logoutBtn').classList.remove('hide');
-      loadSnapshot();
+    if(user && appUser){
+      afterAppLogin();
+    }else if(appUser && !user){
+      loginAs(appUser);
     }else{
       el('loginStatus').textContent = 'Chưa đăng nhập';
-      el('loginBtn').classList.remove('hide');
+      el('openLoginBtn').classList.remove('hide');
       el('logoutBtn').classList.add('hide');
+      applyPermissionUI();
+      openLogin();
     }
   });
 }
-
 async function firebaseSet(path, value){
   if(firebaseReady && currentUser){
     await db.ref(path).set(value);
@@ -566,7 +631,7 @@ function updateOneInput(tr){
   const key = codeKey(code);
   const duoi = tr.querySelector('input[data-field="duoi"]').value;
   const tren = tr.querySelector('input[data-field="tren"]').value;
-  state.checks[key] = {duoi, tren, updatedAt: new Date().toISOString()};
+  state.checks[key] = {duoi, tren, updatedAt: new Date().toISOString(), updatedBy: appUser?.name || 'Admin'};
   const calc = calcRow(item);
   const diffCell = tr.querySelector('.diffCell');
   const actualCell = tr.querySelector('.actualCell');
@@ -640,20 +705,35 @@ function bindEvents(){
   el('checkBody').addEventListener('input', e => {
     if(e.target.matches('input')) updateOneInput(e.target.closest('tr'));
   });
-  el('loginBtn').addEventListener('click', async () => {
-    if(!auth) return;
-    const provider = new firebase.auth.GoogleAuthProvider();
-    provider.setCustomParameters({ prompt: 'select_account' });
-    try{
-      setStatus('Đang chuyển sang Google để đăng nhập...');
-      await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-      await auth.signInWithRedirect(provider);
-    }catch(err){
-      console.error(err);
-      setStatus('Lỗi đăng nhập: ' + (err.code || '') + ' - ' + (err.message || err), true);
+  el('openLoginBtn').addEventListener('click', openLogin);
+  el('adminLoginBtn').addEventListener('click', () => {
+    const pass = el('adminPass').value;
+    if(pass !== ADMIN_PASSWORD){
+      setStatus('Sai mật khẩu Admin.', true);
+      el('adminPass').select();
+      return;
     }
+    loginAs({role:'admin', name:'Admin', loginAt:new Date().toISOString()});
   });
-  el('logoutBtn').addEventListener('click', () => auth && auth.signOut());
+  el('adminPass').addEventListener('keydown', e => {
+    if(e.key === 'Enter') el('adminLoginBtn').click();
+  });
+  document.querySelectorAll('[data-staff]').forEach(btn => {
+    btn.addEventListener('click', () => loginAs({role:'staff', name:btn.dataset.staff, loginAt:new Date().toISOString()}));
+  });
+  el('logoutBtn').addEventListener('click', async () => {
+    saveAppUser(null);
+    currentUser = null;
+    if(auth) await auth.signOut();
+    state.rawItems = [];
+    state.filtered = [];
+    state.checks = {};
+    state.lastFileName = '';
+    renderAll();
+    applyPermissionUI();
+    openLogin();
+    setStatus('Đã thoát. Chọn Admin hoặc nhân viên để vào lại.');
+  });
 }
 
 function boot(){
@@ -662,8 +742,9 @@ function boot(){
   state.dateKey = dateKeyFromISO(iso);
   el('dateTitle').textContent = titleDate(iso);
   bindEvents();
+  applyPermissionUI();
   initFirebase();
-  loadSnapshot();
+  renderAll();
 }
 boot();
 </script>
