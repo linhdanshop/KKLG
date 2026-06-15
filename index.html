@@ -53,7 +53,7 @@
     .tableWrap{height:500px;overflow:auto;background:#fff}
     .checkTable th{font-size:16px}
     .checkTable td{font-size:15px;text-align:center;height:34px}
-    .checkTable td.codeCell{text-align:left;font-weight:650;min-width:240px;font-size:20px}
+    .checkTable td.codeCell{text-align:left;font-weight:800;min-width:145px}
     .nameLine{font-size:11px;color:#666;font-weight:400;margin-top:2px;max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .qtyBox{display:flex;gap:4px;justify-content:center;align-items:center}
     .qtyBox input{width:62px;height:28px;text-align:center;padding:3px;font-size:15px}
@@ -104,13 +104,6 @@
     .capTable input{width:80px;text-align:center}
     .capTable td,.capTable th{font-size:14px}
 
-    #floatingCompactBtn{display:none;position:fixed;right:12px;top:10px;z-index:99999;background:#0b5fa5;color:#fff;border:1px solid #0b5fa5;padding:9px 13px;border-radius:7px;box-shadow:0 2px 10px rgba(0,0,0,.25);font-weight:700}
-    body.compact-mode #floatingCompactBtn{display:block!important}
-    body.compact-mode .topbar, body.compact-mode #statusMsg, body.compact-mode .bar{display:none!important}
-    body.compact-mode .app{padding-top:6px}
-    body.compact-mode .tableWrap{height:calc(100vh - 210px);padding-bottom:160px}
-    body.compact-mode .stockPreview{height:calc(100vh - 150px)}
-    body.compact-mode .stats{display:none!important}
     @media (max-width: 760px){
       body{background:#fff}
       .app{padding:4px;max-width:none}
@@ -130,7 +123,7 @@
       .stats{grid-template-columns:repeat(2,1fr)}
       .tableWrap{height:calc(100vh - 360px);min-height:360px}
       .checkTable th,.checkTable td{font-size:14px;padding:4px 3px}
-      .checkTable td.codeCell{min-width:170px;font-size:18px}
+      .checkTable td.codeCell{min-width:160px;font-size:18px}
       .qtyBox input{width:58px}
       .noteInput{min-width:110px}
       .lamgiaToolbar,.shelfTools{gap:4px}
@@ -138,12 +131,6 @@
       .lgTable th{font-size:16px}.lgTable td{font-size:16px}
       .loginCard{width:100%}
       .staffGrid{grid-template-columns:repeat(2,1fr)}
-      body.compact-mode{overflow:hidden!important;height:100vh}
-      body.compact-mode .app{height:100vh;overflow:hidden}
-      body.compact-mode .panelTitle{padding:5px;font-size:15px}
-      body.compact-mode .tableWrap{height:calc(100vh - 120px)!important;min-height:0;overflow:auto!important;padding-bottom:180px}
-      body.compact-mode .checkTable{margin-bottom:180px}
-      body.compact-mode .pager{display:none!important}
     }
   </style>
 </head>
@@ -157,15 +144,12 @@
     </div>
     <div class="authBox">
       <span id="loginStatus" class="muted">Chưa đăng nhập</span>
-      <button id="fullscreenBtn">Toàn màn hình</button>
-      <button id="toggleHeaderBtn">Ẩn header</button>
       <button id="openLoginBtn" class="primary">Đăng nhập</button>
       <button id="logoutBtn" class="hidden">Thoát</button>
     </div>
   </div>
 
-  <div id="statusMsg" class="msg">Bản V12: mã lớn hơn, lọc nhanh toggle, chênh lệch kho dưới/trên, khóa zoom mobile.</div>
-  <button id="floatingCompactBtn" class="hidden">Hiện header</button>
+  <div id="statusMsg" class="msg">Bản V5: tách KIỂM KÊ và LÀM GIÁ riêng, mặc định mở LÀM GIÁ.</div>
 
   <div id="loginModal" class="loginModal hidden">
     <div class="loginCard">
@@ -884,9 +868,9 @@ function renderKiemKeTable(){
   const mode=$('kkViewMode').value;
   syncQuickButtons();
   if(mode==='TEM') return renderTemTable();
-  if(mode==='DUOI') $('kkHead').innerHTML=`<tr><th>STT</th><th>Mã</th><th>Tồn</th><th>Dưới</th><th>Chênh lệch</th><th>Ghi chú</th></tr>`;
-  else if(mode==='TREN') $('kkHead').innerHTML=`<tr><th>STT</th><th>Mã</th><th>Tồn</th><th>Trên</th><th>Chênh lệch</th><th>Ghi chú</th></tr>`;
-  else $('kkHead').innerHTML=`<tr><th>STT</th><th>Mã</th><th>Tồn</th><th>Dưới</th><th>Trên</th><th>Chênh lệch</th><th>SL Thực tế</th><th>Đã in</th><th>Ghi chú</th><th>Lịch sử</th></tr>`;
+  if(mode==='DUOI') $('kkHead').innerHTML=`<tr><th>STT</th><th>Mã</th><th>Tồn</th><th class="headDuoi">Dưới</th><th>Chênh lệch</th><th>Ghi chú</th></tr>`;
+  else if(mode==='TREN') $('kkHead').innerHTML=`<tr><th>STT</th><th>Mã</th><th>Tồn</th><th class="headTren">Trên</th><th>Chênh lệch</th><th>Ghi chú</th></tr>`;
+  else $('kkHead').innerHTML=`<tr><th>STT</th><th>Mã</th><th>Tồn</th><th class="headDuoi">Dưới</th><th class="headTren">Trên</th><th>Chênh lệch</th><th>SL Thực tế</th><th>Đã in</th><th>Ghi chú</th><th>Lịch sử</th></tr>`;
   const pageSize=state.kiemke.pageSize;
   const totalPages=Math.max(1,Math.ceil(state.kiemke.filtered.length/pageSize));
   if(state.kiemke.page>totalPages) state.kiemke.page=totalPages;
@@ -896,7 +880,7 @@ function renderKiemKeTable(){
   $('kkPageInfo').textContent=`Trang ${state.kiemke.page}/${totalPages} - ${state.kiemke.filtered.length.toLocaleString('vi-VN')} dòng`;
   $('kkPrevBtn').disabled=state.kiemke.page<=1; $('kkNextBtn').disabled=state.kiemke.page>=totalPages;
 }
-function codeCell(item){ return `<td class="codeCell">${escapeHtml(item.code)}${item.noColorWarn?'<span class="warnText">Không màu</span>':''}</td>`; }
+function codeCell(item){ return `<td class="codeCell">${escapeHtml(item.code)}${item.noColorWarn?'<span class="warnText">Không màu</span>':''}${item.name?`<div class="nameLine">${escapeHtml(item.name)}</div>`:''}</td>`; }
 function qtyControl(item, side, c){
   const dk=!!c[`${side}DK`]; const qty=c[`${side}Qty`]??'';
   return `<div class="qtyBox"><input data-code="${escapeAttr(item.code)}" data-side="${side}" data-kind="qty" type="number" value="${escapeAttr(qty)}" ${dk?'disabled':''}/><button data-code="${escapeAttr(item.code)}" data-side="${side}" data-kind="dk" class="dkBtn ${dk?'on':''}">ĐK</button></div>`;
@@ -905,12 +889,13 @@ function rowHtmlKiemKe(item,stt,mode){
   const c=kkCheck(item), calc=kkCalc(item);
   const diffClass=calc.diff===''?'blank':calc.diff<0?'neg':calc.diff>0?'pos':'';
   const note=`<input class="noteInput" data-code="${escapeAttr(item.code)}" data-kind="note" value="${escapeAttr(c.note||'')}" />`;
-  const stockCls=calc.complete?'stockDone':'';
-  const stockTd=`<td class="${stockCls}">${vnNum(item.stock)}</td>`;
-  const diffTd=`<td class="${diffClass}" data-calc="diff">${calc.complete?vnNum(calc.diff):`<span class="calcStatus">${calc.statusText}</span>`}</td>`;
-  if(mode==='DUOI') return `<tr data-row-key="${codeKey(item.code)}"><td>${stt}</td>${codeCell(item)}${stockTd}<td>${qtyControl(item,'duoi',c)}</td>${diffTd}<td>${note}</td></tr>`;
-  if(mode==='TREN') return `<tr data-row-key="${codeKey(item.code)}"><td>${stt}</td>${codeCell(item)}${stockTd}<td>${qtyControl(item,'tren',c)}</td>${diffTd}<td>${note}</td></tr>`;
-  return `<tr data-row-key="${codeKey(item.code)}"><td>${stt}</td>${codeCell(item)}${stockTd}<td>${qtyControl(item,'duoi',c)}</td><td>${qtyControl(item,'tren',c)}</td>${diffTd}<td data-calc="actual">${calc.complete?vnNum(calc.actual):''}</td><td><input type="checkbox" data-code="${escapeAttr(item.code)}" data-kind="printed" ${c.temPrinted?'checked':''}/></td><td>${note}</td><td><button data-code="${escapeAttr(item.code)}" data-kind="history">Xem</button></td></tr>`;
+  const rowCls = item.lastDigit % 2 === 0 ? 'evenRow' : '';
+  const stockCls = calc.complete ? 'stockDone' : '';
+  const stockTd = `<td class="${stockCls}" style="font-size:18px;font-weight:700">${vnNum(item.stock)}</td>`;
+  const diffTd = `<td class="${diffClass}" data-calc="diff">${calc.complete?vnNum(calc.diff):`<span class="calcStatus">${calc.statusText||'Chưa đủ'}</span>`}</td>`;
+  if(mode==='DUOI') return `<tr class="${rowCls}" data-row-key="${codeKey(item.code)}"><td>${stt}</td>${codeCell(item)}${stockTd}<td class="duoiCell">${qtyControl(item,'duoi',c)}</td>${diffTd}<td>${note}</td></tr>`;
+  if(mode==='TREN') return `<tr class="${rowCls}" data-row-key="${codeKey(item.code)}"><td>${stt}</td>${codeCell(item)}${stockTd}<td class="trenCell">${qtyControl(item,'tren',c)}</td>${diffTd}<td>${note}</td></tr>`;
+  return `<tr class="${rowCls}" data-row-key="${codeKey(item.code)}"><td>${stt}</td>${codeCell(item)}${stockTd}<td class="duoiCell">${qtyControl(item,'duoi',c)}</td><td class="trenCell">${qtyControl(item,'tren',c)}</td>${diffTd}<td data-calc="actual">${calc.complete?vnNum(calc.actual):''}</td><td class="printedCell"><input type="checkbox" data-code="${escapeAttr(item.code)}" data-kind="printed" ${c.temPrinted?'checked':''}/></td><td>${note}</td><td><button data-code="${escapeAttr(item.code)}" data-kind="history">Xem</button></td></tr>`;
 }
 function renderTemTable(){
   $('kkHead').innerHTML=`<tr><th>STT</th><th>Mã</th><th>Tồn</th><th>Đã in</th><th>Ghi chú</th></tr>`;
@@ -1111,9 +1096,6 @@ function bindEvents(){
     loginUser({role:'staff', name});
   });
   $('logoutBtn').addEventListener('click',async()=>{ persistUser(null); if(auth) await auth.signOut(); applyPermissionUI(); resetKiemKe(); resetLamGia(); openLogin(); setMsg('Đã thoát.'); });
-  if($('toggleHeaderBtn')) $('toggleHeaderBtn').addEventListener('click',toggleCompactMode);
-  if($('floatingCompactBtn')) $('floatingCompactBtn').addEventListener('click',toggleCompactMode);
-  if($('fullscreenBtn')) $('fullscreenBtn').addEventListener('click',toggleFullscreen);
   $('loadSessionsBtn').addEventListener('click',loadSessions);
   $('loadSessionBtn').addEventListener('click',loadSelectedSession);
   $('deleteSessionBtn').addEventListener('click',deleteSelectedSession);
@@ -1129,12 +1111,10 @@ function bindEvents(){
   $('kkApplyDKDuoiBtn').addEventListener('click',()=>applyDKToFiltered('duoi'));
   $('kkApplyDKTrenBtn').addEventListener('click',()=>applyDKToFiltered('tren'));
   $('kkExportBtn').addEventListener('click',exportKiemKe);
-  if($('kkQuickNotDuoiBtn')) $('kkQuickNotDuoiBtn').addEventListener('click',()=>toggleQuickStatus('NOT_DUOI'));
-  if($('kkQuickNotTrenBtn')) $('kkQuickNotTrenBtn').addEventListener('click',()=>toggleQuickStatus('NOT_TREN'));
   $('kkPrevBtn').addEventListener('click',()=>{state.kiemke.page--;renderKiemKeTable();});
   $('kkNextBtn').addEventListener('click',()=>{state.kiemke.page++;renderKiemKeTable();});
   $('kkPageSize').addEventListener('change',()=>{state.kiemke.pageSize=Number($('kkPageSize').value);state.kiemke.page=1;renderKiemKeTable();});
-  $('toggleStockBtn').addEventListener('click',toggleStockPanel); if($('toggleStockTopBtn')) $('toggleStockTopBtn').addEventListener('click',toggleStockPanel);
+  $('toggleStockBtn').addEventListener('click',toggleStockPanel);$('toggleStockTopBtn').addEventListener('click',toggleStockPanel);
   $('kkBody').addEventListener('input',handleKiemKeInput);
   $('kkBody').addEventListener('click',handleKiemKeClick);
   $('closeHistoryBtn').addEventListener('click',()=>$('historyModal').classList.add('hidden'));
@@ -1162,22 +1142,21 @@ function updateRowCalc(code){
   if(!item) return;
   const calc=kkCalc(item), d=row.querySelector('[data-calc="diff"]'), a=row.querySelector('[data-calc="actual"]');
   const stockCell=row.children[2];
-  if(stockCell) stockCell.classList.toggle('stockDone',!!calc.complete);
+  if(stockCell) stockCell.classList.toggle('stockDone', !!calc.complete);
   if(d){ d.className=calc.diff===''?'blank':calc.diff<0?'neg':calc.diff>0?'pos':''; d.setAttribute('data-calc','diff'); d.innerHTML=calc.complete?vnNum(calc.diff):`<span class="calcStatus">${calc.statusText}</span>`; }
   if(a) a.textContent=calc.complete?vnNum(calc.actual):'';
 }
 function toggleStockPanel(){
   const hidden=$('stockPanel').classList.toggle('leftPanelMobileHide');
-  if($('toggleStockTopBtn')) $('toggleStockTopBtn').textContent=hidden?'Hiện tồn':'Ẩn/Hiện tồn';
-  if($('toggleStockBtn')) $('toggleStockBtn').textContent=hidden?'Hiện tồn':'Ẩn/Hiện tồn';
+  $('toggleStockTopBtn').textContent=hidden?'Hiện tồn':'Ẩn/Hiện tồn';
+  $('toggleStockBtn').textContent=hidden?'Hiện tồn':'Ẩn/Hiện tồn';
 }
 function toggleQuickStatus(status){
-  $('kkStatusFilter').value=$('kkStatusFilter').value===status?'ALL':status;
+  $('kkStatusFilter').value = $('kkStatusFilter').value===status ? 'ALL' : status;
   applyKiemKeFilters();
   syncQuickButtons();
 }
 function syncQuickButtons(){
-  if(!$('kkQuickNotDuoiBtn')||!$('kkQuickNotTrenBtn')) return;
   const mode=$('kkViewMode').value, status=$('kkStatusFilter').value;
   $('kkQuickNotDuoiBtn').classList.toggle('hidden', mode==='TREN'||mode==='TEM');
   $('kkQuickNotTrenBtn').classList.toggle('hidden', mode==='DUOI'||mode==='TEM');
@@ -1187,7 +1166,7 @@ function syncQuickButtons(){
 function lockMobileZoom(){
   document.addEventListener('gesturestart',e=>e.preventDefault(),{passive:false});
   document.addEventListener('gesturechange',e=>e.preventDefault(),{passive:false});
-  document.addEventListener('touchmove',e=>{ if(e.touches&&e.touches.length>1)e.preventDefault(); },{passive:false});
+  document.addEventListener('touchmove',e=>{ if(e.touches && e.touches.length>1) e.preventDefault(); },{passive:false});
   let lastTouchEnd=0; document.addEventListener('touchend',e=>{ const now=Date.now(); if(now-lastTouchEnd<=300)e.preventDefault(); lastTouchEnd=now; },{passive:false});
 }
 function handleKiemKeInput(e){
@@ -1222,17 +1201,6 @@ function handleKiemKeClick(e){
   }
   if(t.dataset.kind==='history') showItemHistory(t.dataset.code);
 }
-function toggleCompactMode(){
-  document.body.classList.toggle('compact-mode');
-  const on=document.body.classList.contains('compact-mode');
-  if($('toggleHeaderBtn')) $('toggleHeaderBtn').textContent=on?'Header đang ẩn':'Ẩn header';
-  if($('floatingCompactBtn')) $('floatingCompactBtn').classList.toggle('hidden',!on);
-  try{localStorage.setItem('KKLG_COMPACT',on?'1':'0')}catch(e){}
-}
-async function toggleFullscreen(){
-  try{ if(!document.fullscreenElement) await document.documentElement.requestFullscreen(); else await document.exitFullscreen(); }
-  catch(e){ setMsg('Trình duyệt không hỗ trợ toàn màn hình.', true); }
-}
 function switchTab(tab){
   state.activeTab=tab;
   document.querySelectorAll('.tabBtn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
@@ -1249,8 +1217,6 @@ function switchTab(tab){
 async function boot(){
   initFirebase();
   bindEvents();
-  lockMobileZoom();
-  try{ if(localStorage.getItem('KKLG_COMPACT')==='1') toggleCompactMode(); }catch(e){}
   applyPermissionUI();
   switchTab(APP_CONFIG.defaultTab);
   const u=savedUser();
