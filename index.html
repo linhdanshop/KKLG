@@ -10,7 +10,7 @@
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <style>
     *{box-sizing:border-box}
-    body{margin:0;font-family:"Segoe UI",Tahoma,Arial,Helvetica,sans-serif;background:#eef2f6;color:#111;font-size:16px}
+    body{margin:0;font-family:Tahoma,Arial,"Segoe UI",sans-serif;background:#f3f4f6;color:#1f2937;font-size:16px}
     .app{width:100%;max-width:none;margin:0 auto;padding:8px 10px}
     .topbar{display:grid;grid-template-columns:280px 1fr 420px;gap:8px;align-items:center;margin-bottom:8px}
     .dateBox{background:#fff200;border:1px solid #aaa;text-align:center;font-size:24px;font-weight:900;padding:8px 5px;min-height:46px;border-radius:6px}
@@ -37,14 +37,14 @@
     .sessionSelect{min-width:260px;max-width:420px}
     .mainGrid{display:grid;grid-template-columns:360px 1fr;gap:10px}
     .panel{background:#fff;border:1px solid #bbb;min-height:calc(100vh - 170px);overflow:hidden;border-radius:6px}
-    .panelTitle{text-align:center;font-size:22px;font-weight:900;color:#d00000;padding:8px;border-bottom:1px solid #111;letter-spacing:0}
+    .panelTitle{text-align:center;font-size:22px;font-weight:800;color:#c1121f;padding:8px;border-bottom:1px solid #d1d5db;letter-spacing:0}
     .leftTools{display:flex;gap:6px;align-items:center;justify-content:space-between;padding:8px;border-bottom:1px solid #ddd;background:#fafafa}
     .stockPreview{height:calc(100vh - 280px);min-height:480px;overflow:auto}
     table{border-collapse:collapse;width:100%}
-    th,td{border:1px solid #222;padding:4px 5px;line-height:1.2;background:#fff;vertical-align:middle}
+    th,td{border:1px solid #8e98a3;padding:4px 5px;line-height:1.2;background:#fff;vertical-align:middle}
     th{background:#f7f7f7;font-weight:900;text-align:center;position:sticky;top:0;z-index:2}
     .stockTable th{font-size:22px;background:#fff}
-    .stockTable td{font-size:18px;height:32px;font-weight:700}
+    .stockTable td{font-size:17px;height:32px;font-weight:500;color:#111827}
     .filters{display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap;padding:10px;border-bottom:1px solid #d8d8d8;background:#fbfbfb}
     .filters label{font-weight:800;margin-top:8px;font-size:15px}
     .stats{display:grid;grid-template-columns:repeat(8,1fr);gap:8px;padding:8px;border-bottom:1px solid #ddd;background:#fff}
@@ -52,8 +52,8 @@
     .stat b{display:block;font-size:24px;color:#004b8d;margin-top:2px}
     .tableWrap{height:calc(100vh - 340px);min-height:460px;overflow:auto;background:#fff}
     .checkTable th{font-size:18px;background:#f1f5fa}
-    .checkTable td{font-size:16px;text-align:center;height:40px;font-weight:600}
-    .checkTable td.codeCell{text-align:left;font-weight:900;min-width:210px;font-size:18px;background:#f8fbff}
+    .checkTable td{font-size:16px;text-align:center;height:40px;font-weight:500;color:#111827}
+    .checkTable td.codeCell{text-align:left;font-weight:600;min-width:210px;font-size:17px;background:#f8fbff;color:#111827}
     .nameLine{font-size:11px;color:#666;font-weight:400;margin-top:2px;max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .qtyBox{display:flex;gap:5px;justify-content:center;align-items:center}
     .qtyBox input{width:76px;height:32px;text-align:center;padding:3px;font-size:17px;font-weight:800}
@@ -75,16 +75,16 @@
     .lgTable th{font-size:19px;background:#fff200;top:0;z-index:5;min-width:58px}
     .lgTable th.sub{background:#f7f7f7;font-size:15px;top:32px;z-index:4}
     .lgTable td{font-size:18px;height:30px;text-align:center;min-width:58px}
-    .lgCode{font-weight:800;text-align:left!important;min-width:80px!important;background:#e7f2ff!important}
-    .lgStock{font-weight:800;min-width:54px!important}
-    .lgStatus{font-size:12px!important;font-weight:900;min-width:84px!important;white-space:nowrap}
-    .stGood{color:#008000;background:#efffed!important}
-    .stBad{color:#005fbd;background:#eef6ff!important}
-    .stOver{color:#d00000;background:#fff0f0!important}
-    .stFull{color:#333;background:#eee!important}
+    .lgCode{font-weight:600;text-align:left!important;min-width:80px!important;background:#eef6ff!important;color:#111827}
+    .lgStock{font-weight:500;min-width:54px!important;color:#111827}
+    .lgStatus{font-size:12px!important;font-weight:700;min-width:84px!important;white-space:nowrap}
+    .stGood{color:#18794e;background:#edf9f1!important}
+    .stBad{color:#1d4ed8;background:#eef4ff!important}
+    .stOver{color:#c1121f;background:#fff1f2!important}
+    .stFull{color:#475569;background:#f3f4f6!important}
     .lgDoneCell{min-width:58px!important}
     .lgDoneRow td,.lgDoneRow .lgCode{background:#d7d7d7!important;color:#555}
-    .lgQtyOne{color:#a000a0}
+    .lgQtyOne{color:#7c3aed}
     .shelfTools{display:flex;gap:5px;align-items:center;flex-wrap:wrap;padding:6px 8px;border-bottom:1px solid #ddd;background:#fff}
     .smallInput{width:80px}
     .wideInput{width:210px}
@@ -108,14 +108,14 @@
     .digitFilters{display:flex;gap:6px;align-items:center;flex-wrap:wrap;width:100%;padding-top:2px}
     .digitBtn{min-width:38px;padding:5px 8px;font-size:15px}
     .digitBtn.on{background:#004b91;color:#fff;border-color:#004b91}
-    .headDuoi,.duoiCell{background:#eef7ff!important}
-    .headTren,.trenCell{background:#fff8e8!important}
-    .qtyBox.duoi input{background:#eef7ff;border-color:#6aa6d8}
+    .headDuoi,.duoiCell{background:#eef6ff!important}
+    .headTren,.trenCell{background:#fff6df!important}
+    .qtyBox.duoi input{background:#f4f9ff;border-color:#8fb6da}
     .qtyBox.duoi .dkBtn{background:#dff0ff}
-    .qtyBox.tren input{background:#fff5dd;border-color:#d7b15a}
+    .qtyBox.tren input{background:#fff8ea;border-color:#d8bc79}
     .qtyBox.tren .dkBtn{background:#fff0bf}
-    .qtyBox.duoi .dkBtn.on{background:#7fc2ff}
-    .qtyBox.tren .dkBtn.on{background:#ffd75f}
+    .qtyBox.duoi .dkBtn.on{background:#8cc7f7}
+    .qtyBox.tren .dkBtn.on{background:#ffd978}
     .compactToggleOn{background:#004b91!important;color:#fff!important;border-color:#004b91!important}
     body.compact-mode .topbar, body.compact-mode #statusMsg, body.compact-mode .bar{display:none!important}
     body.compact-mode .app{padding-top:6px}
@@ -124,8 +124,12 @@
     body.compact-mode .stockPreview{height:calc(100vh - 150px)}
     body.compact-mode .lgTableBox{height:calc(100vh - 170px)}
     .toolbarBtn{font-size:13px;padding:6px 8px}
-    #floatingCompactBtn{display:none}
-    body.compact-mode #floatingCompactBtn{display:block!important;background:#004b91;color:#fff;border-color:#004b91}
+    .evenRow td{background:#fffbe8}
+    .evenCell{background:#fffbe8!important}
+    .evenRow td.codeCell{background:#fff7d6}
+    .evenRow .duoiCell{background:#eef6ff!important}
+    .evenRow .trenCell{background:#fff6df!important}
+
 
     @media (max-width: 760px){
       body{background:#fff}
@@ -175,7 +179,6 @@
   </div>
 
   <div id="statusMsg" class="msg">Bản V6: tối ưu giao diện full màn hình, thêm ẩn header, lọc số cuối 0-9, màu Dưới/Trên dễ nhìn.</div>
-  <button id="floatingCompactBtn" class="hidden" style="position:fixed;right:12px;top:10px;z-index:9998">Hiện header</button>
 
   <div id="loginModal" class="loginModal hidden">
     <div class="loginCard">
@@ -305,7 +308,7 @@
       <button data-lg-filter="OVER">Vượt mức</button>
       <button data-lg-filter="QTY">Số lượng</button>
       <button data-lg-filter="CODE">Ô</button>
-      <button id="lgIgnoreQty1Btn">Loại mã SL=1</button>
+      <button id="lgIgnoreQty1Btn">Loại mã SL=1 và =0</button>
       <button id="lgHideDoneBtn">Loại đã làm</button>
       <button id="lgCompactBtn">Thu gọn danh sách</button>
       <button id="openCapacityBtn" class="primary">Set kệ</button>
@@ -315,7 +318,6 @@
       <span class="muted" id="lgFileName">Chưa có file làm giá</span>
       <span class="spacer"></span>
       <label>Thứ tự kệ</label><input id="lgRackOrder" class="wideInput" placeholder="B,C,E,F,H,K,J,Z" />
-      <label>Ẩn kệ</label><input id="lgHiddenRacks" class="wideInput" placeholder="VD: A,D" />
       <button id="lgApplyLayoutBtn">Áp dụng vị trí</button>
     </div>
     <div class="stats">
@@ -326,7 +328,7 @@
       <div class="stat">Vượt mức<b id="lgStatOver">0</b></div>
       <div class="stat">Đã làm<b id="lgStatDone">0</b></div>
       <div class="stat">Đang hiện<b id="lgStatShow">0</b></div>
-      <div class="stat">SL=1<b id="lgStatQty1">0</b></div>
+      <div class="stat">SL=0 hoặc 1<b id="lgStatQty1">0</b></div>
     </div>
     <div class="lgTableBox"><table class="lgTable"><thead id="lgHead"></thead><tbody id="lgBody"></tbody></table></div>
   </div>
@@ -787,11 +789,11 @@ function rebuildLamGiaSlots(){
 function capForRack(rack){ return state.lamgia.settings[rack] || {qty:80,maxCodes:4,order:999,visible:true}; }
 function calcSlotStatus(slot){
   const cap=capForRack(slot.rack);
-  const compareItems = state.lamgia.ignoreQty1 ? slot.items.filter(x=>toNum(x.stock)!==1) : slot.items;
+  const compareItems = state.lamgia.ignoreQty1 ? slot.items.filter(x=>toNum(x.stock)>1) : slot.items;
   const totalQty = slot.items.reduce((s,x)=>s+toNum(x.stock),0);
   const compareQty = compareItems.reduce((s,x)=>s+toNum(x.stock),0);
   const compareCodes = compareItems.length;
-  const qty1Count = slot.items.filter(x=>toNum(x.stock)===1).length;
+  const qty1Count = slot.items.filter(x=>toNum(x.stock)<=1).length;
   const remainQty = toNum(cap.qty) - compareQty;
   const remainCodes = toNum(cap.maxCodes) - compareCodes;
   let statusType='FULL', statusText='Đủ';
@@ -896,7 +898,7 @@ function renderStockPreview(){
   $('kkFileName').textContent=meta?.fileName || 'Chưa có file';
   $('kkRawInfo').textContent=`Gốc ${state.kiemke.rawItems.length.toLocaleString('vi-VN')} | Làm việc ${state.kiemke.workingItems.length.toLocaleString('vi-VN')}`;
   const rows=state.kiemke.workingItems.slice(0,700);
-  $('stockBody').innerHTML = rows.map(x=>`<tr><td>${escapeHtml(x.code)}${x.noColorWarn?'<span class="warnText">Không màu</span>':''}</td><td>${vnNum(x.stock)}</td></tr>`).join('') + (state.kiemke.workingItems.length>700?`<tr><td colspan="2" class="muted">Preview 700 dòng đầu.</td></tr>`:'');
+  $('stockBody').innerHTML = rows.map(x=>`<tr class="${x.lastDigit%2===0?'evenRow':''}"><td>${escapeHtml(x.code)}${x.noColorWarn?'<span class="warnText">Không màu</span>':''}</td><td>${vnNum(x.stock)}</td></tr>`).join('') + (state.kiemke.workingItems.length>700?`<tr><td colspan="2" class="muted">Preview 700 dòng đầu.</td></tr>`:'');
 }
 function renderKiemKeTable(){
   const mode=$('kkViewMode').value;
@@ -922,9 +924,10 @@ function rowHtmlKiemKe(item,stt,mode){
   const c=kkCheck(item), calc=kkCalc(item);
   const diffClass=calc.diff===''?'blank':calc.diff<0?'neg':calc.diff>0?'pos':'';
   const note=`<input class="noteInput" data-code="${escapeAttr(item.code)}" data-kind="note" value="${escapeAttr(c.note||'')}" />`;
-  if(mode==='DUOI') return `<tr><td>${stt}</td>${codeCell(item)}<td style="font-size:18px;font-weight:900">${vnNum(item.stock)}</td><td class="duoiCell">${qtyControl(item,'duoi',c)}</td><td>${note}</td></tr>`;
-  if(mode==='TREN') return `<tr><td>${stt}</td>${codeCell(item)}<td style="font-size:18px;font-weight:900">${vnNum(item.stock)}</td><td class="trenCell">${qtyControl(item,'tren',c)}</td><td>${note}</td></tr>`;
-  return `<tr><td>${stt}</td>${codeCell(item)}<td style="font-size:18px;font-weight:900">${vnNum(item.stock)}</td><td class="duoiCell">${qtyControl(item,'duoi',c)}</td><td class="trenCell">${qtyControl(item,'tren',c)}</td><td class="${diffClass}">${calc.complete?vnNum(calc.diff):'<span class="blank">Chưa đủ</span>'}</td><td>${calc.complete?vnNum(calc.actual):''}</td><td>${note}</td><td><button data-code="${escapeAttr(item.code)}" data-kind="history">Xem</button></td></tr>`;
+  const rowCls = item.lastDigit % 2 === 0 ? 'evenRow' : '';
+  if(mode==='DUOI') return `<tr class="${rowCls}"><td>${stt}</td>${codeCell(item)}<td style="font-size:18px;font-weight:600">${vnNum(item.stock)}</td><td class="duoiCell">${qtyControl(item,'duoi',c)}</td><td>${note}</td></tr>`;
+  if(mode==='TREN') return `<tr class="${rowCls}"><td>${stt}</td>${codeCell(item)}<td style="font-size:18px;font-weight:600">${vnNum(item.stock)}</td><td class="trenCell">${qtyControl(item,'tren',c)}</td><td>${note}</td></tr>`;
+  return `<tr class="${rowCls}"><td>${stt}</td>${codeCell(item)}<td style="font-size:18px;font-weight:600">${vnNum(item.stock)}</td><td class="duoiCell">${qtyControl(item,'duoi',c)}</td><td class="trenCell">${qtyControl(item,'tren',c)}</td><td class="${diffClass}">${calc.complete?vnNum(calc.diff):'<span class="blank">Chưa đủ</span>'}</td><td>${calc.complete?vnNum(calc.actual):''}</td><td>${note}</td><td><button data-code="${escapeAttr(item.code)}" data-kind="history">Xem</button></td></tr>`;
 }
 function renderTemTable(){
   $('kkHead').innerHTML=`<tr><th>STT</th><th>Mã</th><th>Tồn</th><th>Đã in</th><th>Ghi chú</th></tr>`;
@@ -932,7 +935,7 @@ function renderTemTable(){
   $('kkBody').innerHTML=rows.map((item,idx)=>{
     const c=kkCheck(item);
     const printed=!!c.temPrinted;
-    return `<tr class="${printed?'printed':''}"><td>${idx+1}</td>${codeCell(item)}<td>${vnNum(item.stock)}</td><td><input type="checkbox" data-code="${escapeAttr(item.code)}" data-kind="printed" ${printed?'checked':''}/></td><td><input class="noteInput" data-code="${escapeAttr(item.code)}" data-kind="note" value="${escapeAttr(c.note||'')}" /></td></tr>`;
+    return `<tr class="${printed?'printed':''} ${item.lastDigit%2===0?'evenRow':''}"><td>${idx+1}</td>${codeCell(item)}<td>${vnNum(item.stock)}</td><td><input type="checkbox" data-code="${escapeAttr(item.code)}" data-kind="printed" ${printed?'checked':''}/></td><td><input class="noteInput" data-code="${escapeAttr(item.code)}" data-kind="note" value="${escapeAttr(c.note||'')}" /></td></tr>`;
   }).join('');
   $('kkPageInfo').textContent=`Chế độ in lại tem - ${rows.length.toLocaleString('vi-VN')} dòng`;
   $('kkPrevBtn').disabled=true; $('kkNextBtn').disabled=true;
@@ -964,9 +967,8 @@ function renderLamGiaHeaderInfo(){
   $('lgFileName').textContent = meta ? `${meta.fileName} | ${meta.count||0} dòng | ${meta.sessionId}` : 'Chưa có file làm giá';
   const visible=Object.entries(state.lamgia.settings).filter(([,v])=>v.visible!==false).sort((a,b)=>(a[1].order||999)-(b[1].order||999)).map(([k])=>k);
   $('lgRackOrder').value = visible.join(',');
-  const hidden=Object.entries(state.lamgia.settings).filter(([,v])=>v.visible===false).map(([k])=>k);
-  $('lgHiddenRacks').value = hidden.join(',');
 }
+
 function renderLamGiaStats(){
   const codes=state.lamgia.baseItems.length;
   const stock=state.lamgia.baseItems.reduce((s,x)=>s+toNum(x.stock),0);
@@ -977,7 +979,7 @@ function renderLamGiaStats(){
   $('lgStatOver').textContent=vnNum(all.filter(x=>x.statusType==='OVER').length);
   $('lgStatDone').textContent=vnNum(all.filter(x=>x.done).length);
   $('lgStatShow').textContent=vnNum(state.lamgia.filteredSlots.length);
-  $('lgStatQty1').textContent=vnNum(state.lamgia.baseItems.filter(x=>toNum(x.stock)===1).length);
+  $('lgStatQty1').textContent=vnNum(state.lamgia.baseItems.filter(x=>toNum(x.stock)<=1).length);
 }
 function renderLamGiaTable(){
   const slots=state.lamgia.filteredSlots;
@@ -1009,7 +1011,8 @@ function renderLamGiaTable(){
       const statusClass = slot.statusType==='GOOD'?'stGood':slot.statusType==='BAD'?'stBad':slot.statusType==='OVER'?'stOver':'stFull';
       const doneClass = slot.done?'lgDoneRow':'';
       const qtyOneClass = toNum(item.stock)===1?'lgQtyOne':'';
-      tds += `<td class="lgCode ${doneClass}">${escapeHtml(item.baseCode)}${item.noColorWarn?'<span class="warnText">!</span>':''}</td><td class="lgStock ${qtyOneClass}">${vnNum(item.stock)}</td>`;
+      const evenCell = item.lastDigit % 2 === 0 ? 'evenCell' : '';
+      tds += `<td class="lgCode ${doneClass} ${evenCell}">${escapeHtml(item.baseCode)}${item.noColorWarn?'<span class="warnText">!</span>':''}</td><td class="lgStock ${qtyOneClass} ${evenCell}">${vnNum(item.stock)}</td>`;
       tds += isLast ? `<td class="lgStatus ${statusClass}" title="Gợi ý tiếp: ${escapeAttr(slot.nextCode)}">${escapeHtml(slot.statusText)}</td><td class="lgDoneCell"><input type="checkbox" data-rack="${escapeAttr(slot.rack)}" data-last="${slot.lastDigit}" ${slot.done?'checked':''}/></td>` : `<td></td><td></td>`;
     });
     body.push(`<tr>${tds}</tr>`);
@@ -1060,11 +1063,9 @@ async function saveCapacitySettings(){
 }
 function applyRackLayoutInputs(){
   const order=$('lgRackOrder').value.split(',').map(x=>cleanCode(x)).filter(Boolean);
-  const hidden=$('lgHiddenRacks').value.split(',').map(x=>cleanCode(x)).filter(Boolean);
-  const all=[...new Set([...Object.keys(state.lamgia.settings), ...state.lamgia.baseItems.map(x=>x.rack), ...order, ...hidden])];
+  const all=[...new Set([...Object.keys(state.lamgia.settings), ...state.lamgia.baseItems.map(x=>x.rack), ...order])];
   all.forEach((r,idx)=>{
     if(!state.lamgia.settings[r]) state.lamgia.settings[r]={qty:80,maxCodes:4,order:999,visible:true};
-    state.lamgia.settings[r].visible = !hidden.includes(r);
     const pos=order.indexOf(r);
     if(pos>=0) state.lamgia.settings[r].order=pos+1;
   });
@@ -1126,7 +1127,6 @@ function bindEvents(){
   });
   $('logoutBtn').addEventListener('click',async()=>{ persistUser(null); if(auth) await auth.signOut(); applyPermissionUI(); resetKiemKe(); resetLamGia(); openLogin(); setMsg('Đã thoát.'); });
   $('toggleHeaderBtn').addEventListener('click',toggleCompactMode);
-  $('floatingCompactBtn').addEventListener('click',toggleCompactMode);
   $('fullscreenBtn').addEventListener('click',toggleFullscreen);
   $('loadSessionsBtn').addEventListener('click',loadSessions);
   $('loadSessionBtn').addEventListener('click',loadSelectedSession);
@@ -1202,18 +1202,19 @@ function handleKiemKeClick(e){
 }
 
 function updateDigitButtons(){
+  const selected = (state.kiemke.digitFilters||[])[0] || 'ALL';
   document.querySelectorAll('.digitBtn').forEach(btn=>{
     const d=btn.dataset.digit;
-    const on = d==='ALL' ? !(state.kiemke.digitFilters||[]).length : (state.kiemke.digitFilters||[]).includes(d);
+    const on = d===selected || (selected==='ALL' && d==='ALL');
     btn.classList.toggle('on', on);
   });
 }
 function toggleDigitFilter(digit){
-  if(digit==='ALL'){ state.kiemke.digitFilters=[]; updateDigitButtons(); applyKiemKeFilters(); return; }
-  const arr = state.kiemke.digitFilters || [];
-  const i = arr.indexOf(digit);
-  if(i>=0) arr.splice(i,1); else arr.push(digit);
-  state.kiemke.digitFilters = arr.sort();
+  if(digit==='ALL'){ state.kiemke.digitFilters=[]; }
+  else {
+    const current = (state.kiemke.digitFilters||[])[0] || null;
+    state.kiemke.digitFilters = current===digit ? [] : [digit];
+  }
   updateDigitButtons();
   applyKiemKeFilters();
 }
@@ -1222,8 +1223,6 @@ function toggleCompactMode(){
   const on = document.body.classList.contains('compact-mode');
   $('toggleHeaderBtn').textContent = on ? 'Hiện header' : 'Ẩn header';
   $('toggleHeaderBtn').classList.toggle('compactToggleOn', on);
-  $('floatingCompactBtn').textContent = on ? 'Hiện header' : 'Ẩn header';
-  $('floatingCompactBtn').classList.toggle('hidden', !on);
   try{ localStorage.setItem('KKLG_COMPACT', on ? '1':'0'); }catch(e){}
 }
 async function toggleFullscreen(){
