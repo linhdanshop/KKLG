@@ -10,14 +10,14 @@
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <style>
     *{box-sizing:border-box}
-    body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f5f7;color:#111}
-    .app{max-width:1500px;margin:0 auto;padding:6px}
-    .topbar{display:grid;grid-template-columns:270px 1fr 330px;gap:8px;align-items:center;margin-bottom:6px}
-    .dateBox{background:#fff200;border:1px solid #aaa;text-align:center;font-size:23px;font-weight:900;padding:5px;min-height:38px}
-    .tabs{display:flex;align-items:center;justify-content:center;gap:16px;background:#fff;border:1px solid #bdbdbd;min-height:38px}
-    .tabBtn{border:0;background:transparent;font-size:22px;font-weight:900;cursor:pointer;padding:4px 12px;color:#315c8b}
+    body{margin:0;font-family:"Segoe UI",Tahoma,Arial,Helvetica,sans-serif;background:#eef2f6;color:#111;font-size:16px}
+    .app{width:100%;max-width:none;margin:0 auto;padding:8px 10px}
+    .topbar{display:grid;grid-template-columns:280px 1fr 420px;gap:8px;align-items:center;margin-bottom:8px}
+    .dateBox{background:#fff200;border:1px solid #aaa;text-align:center;font-size:24px;font-weight:900;padding:8px 5px;min-height:46px;border-radius:6px}
+    .tabs{display:flex;align-items:center;justify-content:center;gap:16px;background:#fff;border:1px solid #bdbdbd;min-height:46px;border-radius:6px}
+    .tabBtn{border:0;background:transparent;font-size:23px;font-weight:900;cursor:pointer;padding:6px 14px;color:#315c8b}
     .tabBtn.active{color:#c00000;text-decoration:underline;text-underline-offset:4px}
-    .authBox{background:#fff;border:1px solid #bdbdbd;padding:4px 6px;display:flex;gap:6px;align-items:center;justify-content:flex-end;min-height:38px;font-size:13px}
+    .authBox{background:#fff;border:1px solid #bdbdbd;padding:6px 8px;display:flex;gap:6px;align-items:center;justify-content:flex-end;min-height:46px;font-size:14px;border-radius:6px;flex-wrap:wrap}
     button,.btn{border:1px solid #888;background:#fff;border-radius:4px;padding:6px 9px;cursor:pointer;font-size:14px;font-weight:800;white-space:nowrap}
     button:hover,.btn:hover{background:#eef7ff}
     button.primary{background:#e6f4ff;border-color:#3483c9;color:#064c83}
@@ -32,34 +32,34 @@
     .msg.error{border-color:#c33;background:#fff0f0;color:#9c0000}
     .hidden{display:none!important}
     .muted{color:#666;font-size:12px}
-    .bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:#fff;border:1px solid #ccc;padding:7px;margin-bottom:6px}
+    .bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:#fff;border:1px solid #ccc;padding:8px;margin-bottom:8px;border-radius:6px}
     .bar .spacer{flex:1}
     .sessionSelect{min-width:260px;max-width:420px}
-    .mainGrid{display:grid;grid-template-columns:330px 1fr;gap:8px}
-    .panel{background:#fff;border:1px solid #bbb;min-height:650px;overflow:hidden}
-    .panelTitle{text-align:center;font-size:20px;font-weight:900;color:#e00000;padding:6px;border-bottom:1px solid #111;letter-spacing:.5px}
-    .leftTools{display:flex;gap:6px;align-items:center;justify-content:space-between;padding:6px;border-bottom:1px solid #ddd}
-    .stockPreview{height:590px;overflow:auto}
+    .mainGrid{display:grid;grid-template-columns:360px 1fr;gap:10px}
+    .panel{background:#fff;border:1px solid #bbb;min-height:calc(100vh - 170px);overflow:hidden;border-radius:6px}
+    .panelTitle{text-align:center;font-size:22px;font-weight:900;color:#d00000;padding:8px;border-bottom:1px solid #111;letter-spacing:0}
+    .leftTools{display:flex;gap:6px;align-items:center;justify-content:space-between;padding:8px;border-bottom:1px solid #ddd;background:#fafafa}
+    .stockPreview{height:calc(100vh - 280px);min-height:480px;overflow:auto}
     table{border-collapse:collapse;width:100%}
     th,td{border:1px solid #222;padding:4px 5px;line-height:1.2;background:#fff;vertical-align:middle}
     th{background:#f7f7f7;font-weight:900;text-align:center;position:sticky;top:0;z-index:2}
-    .stockTable th{font-size:20px;background:#fff}
-    .stockTable td{font-size:18px;height:28px}
-    .filters{display:flex;gap:7px;align-items:flex-start;flex-wrap:wrap;padding:8px;border-bottom:1px solid #d8d8d8;background:#fbfbfb}
-    .filters label{font-weight:800;margin-top:7px}
-    .stats{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;padding:7px;border-bottom:1px solid #ddd;background:#fff}
-    .stat{border:1px solid #ccc;background:#f8f8f8;text-align:center;padding:5px;font-size:12px;border-radius:4px;min-height:42px}
-    .stat b{display:block;font-size:19px;color:#004b8d;margin-top:1px}
-    .tableWrap{height:500px;overflow:auto;background:#fff}
-    .checkTable th{font-size:16px}
-    .checkTable td{font-size:15px;text-align:center;height:34px}
-    .checkTable td.codeCell{text-align:left;font-weight:800;min-width:145px}
+    .stockTable th{font-size:22px;background:#fff}
+    .stockTable td{font-size:18px;height:32px;font-weight:700}
+    .filters{display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap;padding:10px;border-bottom:1px solid #d8d8d8;background:#fbfbfb}
+    .filters label{font-weight:800;margin-top:8px;font-size:15px}
+    .stats{display:grid;grid-template-columns:repeat(8,1fr);gap:8px;padding:8px;border-bottom:1px solid #ddd;background:#fff}
+    .stat{border:1px solid #ccc;background:#f8f8f8;text-align:center;padding:6px;font-size:13px;border-radius:6px;min-height:52px;font-weight:700}
+    .stat b{display:block;font-size:24px;color:#004b8d;margin-top:2px}
+    .tableWrap{height:calc(100vh - 340px);min-height:460px;overflow:auto;background:#fff}
+    .checkTable th{font-size:18px;background:#f1f5fa}
+    .checkTable td{font-size:16px;text-align:center;height:40px;font-weight:600}
+    .checkTable td.codeCell{text-align:left;font-weight:900;min-width:210px;font-size:18px;background:#f8fbff}
     .nameLine{font-size:11px;color:#666;font-weight:400;margin-top:2px;max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .qtyBox{display:flex;gap:4px;justify-content:center;align-items:center}
-    .qtyBox input{width:62px;height:28px;text-align:center;padding:3px;font-size:15px}
+    .qtyBox{display:flex;gap:5px;justify-content:center;align-items:center}
+    .qtyBox input{width:76px;height:32px;text-align:center;padding:3px;font-size:17px;font-weight:800}
     .dkBtn{padding:3px 5px;font-size:12px;min-width:32px;background:#fffbe6}
     .dkBtn.on{background:#ffe900;border-color:#555;color:#000}
-    .noteInput{min-width:140px;width:100%;height:28px;padding:3px 5px}
+    .noteInput{min-width:170px;width:100%;height:32px;padding:4px 6px;font-size:15px}
     .neg{color:#c00000;font-weight:900}
     .pos{color:#007000;font-weight:900}
     .blank{color:#999;font-size:12px}
@@ -104,6 +104,29 @@
     .capTable input{width:80px;text-align:center}
     .capTable td,.capTable th{font-size:14px}
 
+
+    .digitFilters{display:flex;gap:6px;align-items:center;flex-wrap:wrap;width:100%;padding-top:2px}
+    .digitBtn{min-width:38px;padding:5px 8px;font-size:15px}
+    .digitBtn.on{background:#004b91;color:#fff;border-color:#004b91}
+    .headDuoi,.duoiCell{background:#eef7ff!important}
+    .headTren,.trenCell{background:#fff8e8!important}
+    .qtyBox.duoi input{background:#eef7ff;border-color:#6aa6d8}
+    .qtyBox.duoi .dkBtn{background:#dff0ff}
+    .qtyBox.tren input{background:#fff5dd;border-color:#d7b15a}
+    .qtyBox.tren .dkBtn{background:#fff0bf}
+    .qtyBox.duoi .dkBtn.on{background:#7fc2ff}
+    .qtyBox.tren .dkBtn.on{background:#ffd75f}
+    .compactToggleOn{background:#004b91!important;color:#fff!important;border-color:#004b91!important}
+    body.compact-mode .topbar, body.compact-mode #statusMsg, body.compact-mode .bar{display:none!important}
+    body.compact-mode .app{padding-top:6px}
+    body.compact-mode .panel, body.compact-mode .lamgiaWrap{min-height:calc(100vh - 16px)}
+    body.compact-mode .tableWrap{height:calc(100vh - 210px)}
+    body.compact-mode .stockPreview{height:calc(100vh - 150px)}
+    body.compact-mode .lgTableBox{height:calc(100vh - 170px)}
+    .toolbarBtn{font-size:13px;padding:6px 8px}
+    #floatingCompactBtn{display:none}
+    body.compact-mode #floatingCompactBtn{display:block!important;background:#004b91;color:#fff;border-color:#004b91}
+
     @media (max-width: 760px){
       body{background:#fff}
       .app{padding:4px;max-width:none}
@@ -121,13 +144,13 @@
       .filters{gap:5px;align-items:center}
       select[multiple]{height:52px;min-width:75px}
       .stats{grid-template-columns:repeat(2,1fr)}
-      .tableWrap{height:calc(100vh - 360px);min-height:360px}
+      .tableWrap{height:calc(100vh - 300px);min-height:360px}
       .checkTable th,.checkTable td{font-size:14px;padding:4px 3px}
-      .checkTable td.codeCell{min-width:130px}
+      .checkTable td.codeCell{min-width:150px;font-size:16px}
       .qtyBox input{width:58px}
       .noteInput{min-width:110px}
       .lamgiaToolbar,.shelfTools{gap:4px}
-      .lgTableBox{height:calc(100vh - 250px);min-height:430px}
+      .lgTableBox{height:calc(100vh - 220px);min-height:430px}
       .lgTable th{font-size:16px}.lgTable td{font-size:16px}
       .loginCard{width:100%}
       .staffGrid{grid-template-columns:repeat(2,1fr)}
@@ -144,12 +167,15 @@
     </div>
     <div class="authBox">
       <span id="loginStatus" class="muted">Chưa đăng nhập</span>
+      <button id="fullscreenBtn" class="toolbarBtn">Toàn màn hình</button>
+      <button id="toggleHeaderBtn" class="toolbarBtn">Ẩn header</button>
       <button id="openLoginBtn" class="primary">Đăng nhập</button>
       <button id="logoutBtn" class="hidden">Thoát</button>
     </div>
   </div>
 
-  <div id="statusMsg" class="msg">Bản V5: tách KIỂM KÊ và LÀM GIÁ riêng, mặc định mở LÀM GIÁ.</div>
+  <div id="statusMsg" class="msg">Bản V6: tối ưu giao diện full màn hình, thêm ẩn header, lọc số cuối 0-9, màu Dưới/Trên dễ nhìn.</div>
+  <button id="floatingCompactBtn" class="hidden" style="position:fixed;right:12px;top:10px;z-index:9998">Hiện header</button>
 
   <div id="loginModal" class="loginModal hidden">
     <div class="loginCard">
@@ -240,6 +266,20 @@
         <button id="kkApplyDKDuoiBtn" class="warn">ĐK Dưới lọc</button>
         <button id="kkApplyDKTrenBtn" class="warn">ĐK Trên lọc</button>
         <button id="kkExportBtn" class="green">Xuất Excel</button>
+        <div class="digitFilters">
+          <label>Số cuối</label>
+          <button type="button" class="digitBtn on" data-digit="ALL">Tất cả</button>
+          <button type="button" class="digitBtn" data-digit="0">0</button>
+          <button type="button" class="digitBtn" data-digit="1">1</button>
+          <button type="button" class="digitBtn" data-digit="2">2</button>
+          <button type="button" class="digitBtn" data-digit="3">3</button>
+          <button type="button" class="digitBtn" data-digit="4">4</button>
+          <button type="button" class="digitBtn" data-digit="5">5</button>
+          <button type="button" class="digitBtn" data-digit="6">6</button>
+          <button type="button" class="digitBtn" data-digit="7">7</button>
+          <button type="button" class="digitBtn" data-digit="8">8</button>
+          <button type="button" class="digitBtn" data-digit="9">9</button>
+        </div>
       </div>
       <div class="stats">
         <div class="stat">Tồn hệ thống<b id="kkStatTotalStock">0</b></div>
@@ -332,7 +372,7 @@ const state = {
   sessions: {kiemke: [], lamgia: []},
   sessionId: {kiemke: null, lamgia: null},
   meta: {kiemke: null, lamgia: null},
-  kiemke: {rawItems: [], workingItems: [], checks: {}, filtered: [], page: 1, pageSize: APP_CONFIG.pageSize},
+  kiemke: {rawItems: [], workingItems: [], checks: {}, filtered: [], page: 1, pageSize: APP_CONFIG.pageSize, digitFilters: []},
   lamgia: {rawItems: [], baseItems: [], slots: [], slotStatus: {}, filter: 'ALL', ignoreQty1: false, hideDone: false, compact: false, settings: clone(APP_CONFIG.defaultCapacity), filteredSlots: []}
 };
 const saveTimers = {};
@@ -595,7 +635,7 @@ async function deleteSelectedSession(){
 /**************************************************************
  * KIEMKE_SERVICE
  **************************************************************/
-function resetKiemKe(){ state.kiemke={rawItems:[],workingItems:[],checks:{},filtered:[],page:1,pageSize:APP_CONFIG.pageSize}; renderKiemKeAll(); }
+function resetKiemKe(){ state.kiemke={rawItems:[],workingItems:[],checks:{},filtered:[],page:1,pageSize:APP_CONFIG.pageSize,digitFilters:[]}; renderKiemKeAll(); updateDigitButtons(); }
 async function saveKiemKeUpload(fileName, rawItems){
   const working=makeWorkingItems(rawItems);
   const sid=await createSession('kiemke', fileName, rawItems, working.length);
@@ -788,8 +828,10 @@ function applyKiemKeFilters(){
   const valRaw=$('kkStockVal').value;
   const val=toNum(valRaw);
   const search=norm($('kkSearch').value);
+  const digits=state.kiemke.digitFilters || [];
   const status=$('kkViewMode').value==='TEM' ? 'REPRINT' : $('kkStatusFilter').value;
   let arr=state.kiemke.workingItems.filter(item=>{
+    if(digits.length && !digits.includes(String(item.lastDigit))) return false;
     if(include.length && !include.includes(item.rack)) return false;
     if(exclude.includes(item.rack)) return false;
     const st=toNum(item.stock);
@@ -859,9 +901,9 @@ function renderStockPreview(){
 function renderKiemKeTable(){
   const mode=$('kkViewMode').value;
   if(mode==='TEM') return renderTemTable();
-  if(mode==='DUOI') $('kkHead').innerHTML=`<tr><th>STT</th><th>Mã</th><th>Tồn</th><th>Dưới</th><th>Ghi chú</th></tr>`;
-  else if(mode==='TREN') $('kkHead').innerHTML=`<tr><th>STT</th><th>Mã</th><th>Tồn</th><th>Trên</th><th>Ghi chú</th></tr>`;
-  else $('kkHead').innerHTML=`<tr><th>STT</th><th>Mã</th><th>Tồn</th><th>Dưới</th><th>Trên</th><th>Chênh lệch</th><th>SL Thực tế</th><th>Ghi chú</th><th>Lịch sử</th></tr>`;
+  if(mode==='DUOI') $('kkHead').innerHTML=`<tr><th>STT</th><th>Mã</th><th>Tồn</th><th class="headDuoi">Dưới</th><th>Ghi chú</th></tr>`;
+  else if(mode==='TREN') $('kkHead').innerHTML=`<tr><th>STT</th><th>Mã</th><th>Tồn</th><th class="headTren">Trên</th><th>Ghi chú</th></tr>`;
+  else $('kkHead').innerHTML=`<tr><th>STT</th><th>Mã</th><th>Tồn</th><th class="headDuoi">Dưới</th><th class="headTren">Trên</th><th>Chênh lệch</th><th>SL Thực tế</th><th>Ghi chú</th><th>Lịch sử</th></tr>`;
   const pageSize=state.kiemke.pageSize;
   const totalPages=Math.max(1,Math.ceil(state.kiemke.filtered.length/pageSize));
   if(state.kiemke.page>totalPages) state.kiemke.page=totalPages;
@@ -871,18 +913,18 @@ function renderKiemKeTable(){
   $('kkPageInfo').textContent=`Trang ${state.kiemke.page}/${totalPages} - ${state.kiemke.filtered.length.toLocaleString('vi-VN')} dòng`;
   $('kkPrevBtn').disabled=state.kiemke.page<=1; $('kkNextBtn').disabled=state.kiemke.page>=totalPages;
 }
-function codeCell(item){ return `<td class="codeCell">${escapeHtml(item.code)}${item.noColorWarn?'<span class="warnText">Không màu</span>':''}${item.name?`<div class="nameLine">${escapeHtml(item.name)}</div>`:''}</td>`; }
+function codeCell(item){ return `<td class="codeCell">${escapeHtml(item.code)}${item.noColorWarn?'<span class="warnText">Không màu</span>':''}</td>`; }
 function qtyControl(item, side, c){
   const dk=!!c[`${side}DK`]; const qty=c[`${side}Qty`]??'';
-  return `<div class="qtyBox"><input data-code="${escapeAttr(item.code)}" data-side="${side}" data-kind="qty" type="number" value="${escapeAttr(qty)}" ${dk?'disabled':''}/><button data-code="${escapeAttr(item.code)}" data-side="${side}" data-kind="dk" class="dkBtn ${dk?'on':''}">ĐK</button></div>`;
+  return `<div class="qtyBox ${side}"><input inputmode="numeric" autocomplete="off" data-code="${escapeAttr(item.code)}" data-side="${side}" data-kind="qty" type="number" value="${escapeAttr(qty)}" ${dk?'disabled':''}/><button data-code="${escapeAttr(item.code)}" data-side="${side}" data-kind="dk" class="dkBtn ${dk?'on':''}">ĐK</button></div>`;
 }
 function rowHtmlKiemKe(item,stt,mode){
   const c=kkCheck(item), calc=kkCalc(item);
   const diffClass=calc.diff===''?'blank':calc.diff<0?'neg':calc.diff>0?'pos':'';
   const note=`<input class="noteInput" data-code="${escapeAttr(item.code)}" data-kind="note" value="${escapeAttr(c.note||'')}" />`;
-  if(mode==='DUOI') return `<tr><td>${stt}</td>${codeCell(item)}<td>${vnNum(item.stock)}</td><td>${qtyControl(item,'duoi',c)}</td><td>${note}</td></tr>`;
-  if(mode==='TREN') return `<tr><td>${stt}</td>${codeCell(item)}<td>${vnNum(item.stock)}</td><td>${qtyControl(item,'tren',c)}</td><td>${note}</td></tr>`;
-  return `<tr><td>${stt}</td>${codeCell(item)}<td>${vnNum(item.stock)}</td><td>${qtyControl(item,'duoi',c)}</td><td>${qtyControl(item,'tren',c)}</td><td class="${diffClass}">${calc.complete?vnNum(calc.diff):'<span class="blank">Chưa đủ</span>'}</td><td>${calc.complete?vnNum(calc.actual):''}</td><td>${note}</td><td><button data-code="${escapeAttr(item.code)}" data-kind="history">Xem</button></td></tr>`;
+  if(mode==='DUOI') return `<tr><td>${stt}</td>${codeCell(item)}<td style="font-size:18px;font-weight:900">${vnNum(item.stock)}</td><td class="duoiCell">${qtyControl(item,'duoi',c)}</td><td>${note}</td></tr>`;
+  if(mode==='TREN') return `<tr><td>${stt}</td>${codeCell(item)}<td style="font-size:18px;font-weight:900">${vnNum(item.stock)}</td><td class="trenCell">${qtyControl(item,'tren',c)}</td><td>${note}</td></tr>`;
+  return `<tr><td>${stt}</td>${codeCell(item)}<td style="font-size:18px;font-weight:900">${vnNum(item.stock)}</td><td class="duoiCell">${qtyControl(item,'duoi',c)}</td><td class="trenCell">${qtyControl(item,'tren',c)}</td><td class="${diffClass}">${calc.complete?vnNum(calc.diff):'<span class="blank">Chưa đủ</span>'}</td><td>${calc.complete?vnNum(calc.actual):''}</td><td>${note}</td><td><button data-code="${escapeAttr(item.code)}" data-kind="history">Xem</button></td></tr>`;
 }
 function renderTemTable(){
   $('kkHead').innerHTML=`<tr><th>STT</th><th>Mã</th><th>Tồn</th><th>Đã in</th><th>Ghi chú</th></tr>`;
@@ -1083,6 +1125,9 @@ function bindEvents(){
     loginUser({role:'staff', name});
   });
   $('logoutBtn').addEventListener('click',async()=>{ persistUser(null); if(auth) await auth.signOut(); applyPermissionUI(); resetKiemKe(); resetLamGia(); openLogin(); setMsg('Đã thoát.'); });
+  $('toggleHeaderBtn').addEventListener('click',toggleCompactMode);
+  $('floatingCompactBtn').addEventListener('click',toggleCompactMode);
+  $('fullscreenBtn').addEventListener('click',toggleFullscreen);
   $('loadSessionsBtn').addEventListener('click',loadSessions);
   $('loadSessionBtn').addEventListener('click',loadSelectedSession);
   $('deleteSessionBtn').addEventListener('click',deleteSelectedSession);
@@ -1094,7 +1139,8 @@ function bindEvents(){
   });
 
   ['kkRackInclude','kkRackExclude','kkStockOp','kkStockVal','kkSearch','kkStatusFilter','kkViewMode'].forEach(id=>$(id).addEventListener(id.includes('Search')||id.includes('Val')?'input':'change',applyKiemKeFilters));
-  $('kkClearFilterBtn').addEventListener('click',()=>{ ['kkRackInclude','kkRackExclude'].forEach(id=>[...$(id).options].forEach(o=>o.selected=false)); $('kkStockOp').value=''; $('kkStockVal').value=''; $('kkSearch').value=''; $('kkStatusFilter').value='ALL'; applyKiemKeFilters(); });
+  document.querySelectorAll('.digitBtn').forEach(btn=>btn.addEventListener('click',()=>toggleDigitFilter(btn.dataset.digit)));
+  $('kkClearFilterBtn').addEventListener('click',()=>{ ['kkRackInclude','kkRackExclude'].forEach(id=>[...$(id).options].forEach(o=>o.selected=false)); $('kkStockOp').value=''; $('kkStockVal').value=''; $('kkSearch').value=''; $('kkStatusFilter').value='ALL'; state.kiemke.digitFilters=[]; updateDigitButtons(); applyKiemKeFilters(); });
   $('kkApplyDKDuoiBtn').addEventListener('click',()=>applyDKToFiltered('duoi'));
   $('kkApplyDKTrenBtn').addEventListener('click',()=>applyDKToFiltered('tren'));
   $('kkExportBtn').addEventListener('click',exportKiemKe);
@@ -1104,6 +1150,7 @@ function bindEvents(){
   $('toggleStockBtn').addEventListener('click',()=>$('stockPanel').classList.toggle('leftPanelMobileHide'));
   $('kkBody').addEventListener('input',handleKiemKeInput);
   $('kkBody').addEventListener('click',handleKiemKeClick);
+  $('kkBody').addEventListener('focusin',e=>{ if(e.target.matches('input[data-kind="qty"]')) { e.target.select(); } });
   $('closeHistoryBtn').addEventListener('click',()=>$('historyModal').classList.add('hidden'));
 
   document.querySelectorAll('[data-lg-filter]').forEach(btn=>btn.addEventListener('click',()=>{ document.querySelectorAll('[data-lg-filter]').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); state.lamgia.filter=btn.dataset.lgFilter; renderLamGiaAll(); }));
@@ -1153,6 +1200,38 @@ function handleKiemKeClick(e){
   }
   if(t.dataset.kind==='history') showItemHistory(t.dataset.code);
 }
+
+function updateDigitButtons(){
+  document.querySelectorAll('.digitBtn').forEach(btn=>{
+    const d=btn.dataset.digit;
+    const on = d==='ALL' ? !(state.kiemke.digitFilters||[]).length : (state.kiemke.digitFilters||[]).includes(d);
+    btn.classList.toggle('on', on);
+  });
+}
+function toggleDigitFilter(digit){
+  if(digit==='ALL'){ state.kiemke.digitFilters=[]; updateDigitButtons(); applyKiemKeFilters(); return; }
+  const arr = state.kiemke.digitFilters || [];
+  const i = arr.indexOf(digit);
+  if(i>=0) arr.splice(i,1); else arr.push(digit);
+  state.kiemke.digitFilters = arr.sort();
+  updateDigitButtons();
+  applyKiemKeFilters();
+}
+function toggleCompactMode(){
+  document.body.classList.toggle('compact-mode');
+  const on = document.body.classList.contains('compact-mode');
+  $('toggleHeaderBtn').textContent = on ? 'Hiện header' : 'Ẩn header';
+  $('toggleHeaderBtn').classList.toggle('compactToggleOn', on);
+  $('floatingCompactBtn').textContent = on ? 'Hiện header' : 'Ẩn header';
+  $('floatingCompactBtn').classList.toggle('hidden', !on);
+  try{ localStorage.setItem('KKLG_COMPACT', on ? '1':'0'); }catch(e){}
+}
+async function toggleFullscreen(){
+  try{
+    if(!document.fullscreenElement) await document.documentElement.requestFullscreen();
+    else await document.exitFullscreen();
+  }catch(e){ setMsg('Trình duyệt không hỗ trợ toàn màn hình.', true); }
+}
 function switchTab(tab){
   state.activeTab=tab;
   document.querySelectorAll('.tabBtn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
@@ -1169,7 +1248,9 @@ function switchTab(tab){
 async function boot(){
   initFirebase();
   bindEvents();
+  try{ if(localStorage.getItem('KKLG_COMPACT')==='1') toggleCompactMode(); }catch(e){}
   applyPermissionUI();
+  updateDigitButtons();
   switchTab(APP_CONFIG.defaultTab);
   const u=savedUser();
   if(u){ appUser=u; applyPermissionUI(); try{ await ensureAnonAuth(); await loadSettings(); await loadSessions(); }catch(e){ setMsg(`Lỗi khôi phục đăng nhập: ${e.code||''} - ${e.message}`, true); openLogin(); } }
