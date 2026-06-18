@@ -8,7 +8,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-  <script src="https://unpkg.com/@zxing/browser@0.1.5/umd/index.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/@zxing/browser@0.1.5/umd/index.min.js"></script>
   <style>
     *{box-sizing:border-box}
     :root{--blue:#0b5fa5;--red:#c1121f;--line:#9ca3af;--bg:#eef2f5;--yellow:#fff6bf;--duoi:#eef7ff;--tren:#fff5df}
@@ -62,7 +62,7 @@
 </div>
 <script>
 const APP_CONFIG={firebaseConfig:{apiKey:"AIzaSyAEVVkiIa-0ondzVesYAu31kBTae4Q1D9U",authDomain:"kklg-2165b.firebaseapp.com",databaseURL:"https://kklg-2165b-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"kklg-2165b",storageBucket:"kklg-2165b.firebasestorage.app",messagingSenderId:"394170018971",appId:"1:394170018971:web:8bd55930397bf93b442a3e"},root:"kiemke_lamgia",scanRoot:"quet_ma",defaultTab:"lamgia",pageSize:300,adminPassword:"@An12345678",loginRememberMs:86400000,defaultStaff:{"An":{mode:"edit",order:1},"Nguyệt":{mode:"edit",order:2},"Thủy":{mode:"edit",order:3},"Huyền":{mode:"edit",order:4}},defaultCapacity:{B:{qty:80,maxCodes:4,order:1,visible:true},C:{qty:160,maxCodes:4,order:2,visible:true},E:{qty:160,maxCodes:4,order:3,visible:true},F:{qty:80,maxCodes:4,order:4,visible:true},H:{qty:80,maxCodes:4,order:5,visible:true},K:{qty:80,maxCodes:4,order:6,visible:true},J:{qty:160,maxCodes:4,order:7,visible:true},Z:{qty:40,maxCodes:4,order:8,visible:true}}};
-let db=null,auth=null,firebaseReady=false,appUser=null,activeMultiPicker=null,kkChecksRef=null,kkRemoteQueued=null,kkRemoteRenderTimer=null,kkImportSide="",zoomGuardInstalled=false,lastTouchEnd=0,scanCodeReader=null,scanCameraControls=null,scanCameraActive=false,scanCameraProcessing=false,scanLastCameraCode="",scanLastCameraAt=0,scanAudioCtx=null;const state={staffPermissions:clone(APP_CONFIG.defaultStaff),activeTab:APP_CONFIG.defaultTab,dateISO:todayISO(),sessions:{kiemke:[],lamgia:[],quetma:[]},sessionId:{kiemke:null,lamgia:null,quetma:null},meta:{kiemke:null,lamgia:null,quetma:null},kiemke:{rawItems:[],workingItems:[],checks:{},filtered:[],page:1,pageSize:APP_CONFIG.pageSize,digitFilters:[]},lamgia:{rawItems:[],baseItems:[],slots:[],slotStatus:{},filter:'ALL',ignoreQty1:false,hideDone:false,compact:false,settings:clone(APP_CONFIG.defaultCapacity),filteredSlots:[]},scan:{masterCodes:[],scans:[],masterSearch:'',masterPage:1,masterPageSize:300}};const saveTimers={};const pendingSaves={};let kkHistoryRows=[],kkHistoryPage=0,kkSearchTimer=null,kkStatsTimer=null;const $=id=>document.getElementById(id);
+let db=null,auth=null,firebaseReady=false,appUser=null,activeMultiPicker=null,kkChecksRef=null,kkRemoteQueued=null,kkRemoteRenderTimer=null,kkImportSide="",zoomGuardInstalled=false,lastTouchEnd=0,scanCodeReader=null,scanCameraControls=null,scanCameraActive=false,scanCameraProcessing=false,scanLastCameraCode="",scanLastCameraAt=0,scanAudioCtx=null,scanNativeTimer=null,scanNativeStream=null;const state={staffPermissions:clone(APP_CONFIG.defaultStaff),activeTab:APP_CONFIG.defaultTab,dateISO:todayISO(),sessions:{kiemke:[],lamgia:[],quetma:[]},sessionId:{kiemke:null,lamgia:null,quetma:null},meta:{kiemke:null,lamgia:null,quetma:null},kiemke:{rawItems:[],workingItems:[],checks:{},filtered:[],page:1,pageSize:APP_CONFIG.pageSize,digitFilters:[]},lamgia:{rawItems:[],baseItems:[],slots:[],slotStatus:{},filter:'ALL',ignoreQty1:false,hideDone:false,compact:false,settings:clone(APP_CONFIG.defaultCapacity),filteredSlots:[]},scan:{masterCodes:[],scans:[],masterSearch:'',masterPage:1,masterPageSize:300}};const saveTimers={};const pendingSaves={};let kkHistoryRows=[],kkHistoryPage=0,kkSearchTimer=null,kkStatsTimer=null;const $=id=>document.getElementById(id);
 function clone(x){return JSON.parse(JSON.stringify(x))}function todayISO(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}function nowStamp(){return Date.now()}function dateTitle(iso){const [y,m,d]=String(iso).split('-');return `Ngày ${d}/${m}/${y}`}function vnNum(n){if(n===''||n==null||Number.isNaN(n))return'';return Number(n).toLocaleString('vi-VN')}function toNum(v){if(v===''||v==null)return 0;if(typeof v==='number')return Number.isFinite(v)?Math.trunc(v):0;const n=Number(String(v).replace(/,/g,'.').replace(/[^0-9.\-]/g,''));return Number.isFinite(n)?Math.trunc(n):0}function norm(s){return String(s??'').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d').replace(/\s+/g,' ')}function cleanCode(s){return String(s??'').trim().replace(/\s+/g,' ').toUpperCase()}function escapeHtml(s){return String(s??'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}function escapeAttr(s){return escapeHtml(s).replace(/'/g,'&#39;')}function codeKey(code){return cleanCode(code).replace(/[.#$\[\]\/]/g,'_')}function selectedValues(sel){return [...sel.options].filter(o=>o.selected).map(o=>o.value)}function setMsg(t,err=false){$('statusMsg').textContent=t;$('statusMsg').classList.toggle('error',!!err)}function pushKey(path){return db.ref(path).push().key}function sessionLabel(s){return `${s.date||''} | ${s.fileName||''} | ${s.createdBy||''} | ${vnNum(s.count||s.workingCount||0)} dòng`}
 function initFirebase(){try{firebase.initializeApp(APP_CONFIG.firebaseConfig);db=firebase.database();auth=firebase.auth();firebaseReady=true}catch(e){setMsg(`Lỗi Firebase init: ${e.message}`,true)}}async function fbGet(path){const s=await db.ref(path).get();return s.exists()?s.val():null}async function fbSet(path,v){return db.ref(path).set(v)}async function fbUpdate(path,v){return db.ref(path).update(v)}async function fbMultiUpdate(updates){return db.ref().update(updates)}async function saveObjectChunked(base,obj,size=500){const entries=Object.entries(obj);for(let i=0;i<entries.length;i+=size){const u={};entries.slice(i,i+size).forEach(([k,v])=>u[k]=v);await fbUpdate(base,u)}}
 function savedUser(){try{const raw=JSON.parse(localStorage.getItem('KKLG_USER')||'null');if(!raw)return null;const exp=raw.expiresAt||0;if(exp&&Date.now()>exp){localStorage.removeItem('KKLG_USER');return null}return raw}catch(e){return null}}
@@ -254,10 +254,101 @@ function playScanBeep(){
     o.start(t);g.gain.exponentialRampToValueAtTime(0.001,t+0.12);o.stop(t+0.13);
   }catch(e){}
 }
+
+const ZXING_SCRIPT_URLS=[
+  'https://cdn.jsdelivr.net/npm/@zxing/browser@0.1.5/umd/index.min.js',
+  'https://unpkg.com/@zxing/browser@0.1.5/umd/index.min.js',
+  'https://cdn.jsdelivr.net/npm/@zxing/library@0.20.0/umd/index.min.js',
+  'https://unpkg.com/@zxing/library@0.20.0/umd/index.min.js'
+];
+const ZXING_MODULE_URLS=[
+  'https://cdn.jsdelivr.net/npm/@zxing/browser@0.1.5/+esm',
+  'https://esm.sh/@zxing/browser@0.1.5?bundle'
+];
+function getZxingApi(){
+  if(window.ZXingBrowser&&window.ZXingBrowser.BrowserMultiFormatReader)return window.ZXingBrowser;
+  if(window.ZXing&&window.ZXing.BrowserMultiFormatReader)return window.ZXing;
+  return null;
+}
+function loadScriptOnce(url){
+  return new Promise((resolve,reject)=>{
+    const s=document.createElement('script');
+    let done=false;
+    const timer=setTimeout(()=>{if(done)return;done=true;try{s.remove()}catch(e){};reject(new Error('timeout'))},9000);
+    s.src=url;
+    s.async=true;
+    s.onload=()=>{if(done)return;done=true;clearTimeout(timer);resolve(true)};
+    s.onerror=()=>{if(done)return;done=true;clearTimeout(timer);try{s.remove()}catch(e){};reject(new Error('load fail'))};
+    document.head.appendChild(s);
+  });
+}
+async function ensureZxingApi(){
+  let api=getZxingApi();
+  if(api)return api;
+  for(const url of ZXING_SCRIPT_URLS){
+    try{
+      await loadScriptOnce(url);
+      api=getZxingApi();
+      if(api)return api;
+    }catch(e){}
+  }
+  for(const url of ZXING_MODULE_URLS){
+    try{
+      const mod=await import(url);
+      if(mod&&mod.BrowserMultiFormatReader){
+        window.ZXingBrowser=mod;
+        return mod;
+      }
+    }catch(e){}
+  }
+  return null;
+}
+function makeZxingHints(ZX){
+  try{
+    if(!ZX||!ZX.DecodeHintType||!ZX.BarcodeFormat)return undefined;
+    const F=ZX.BarcodeFormat,formats=[
+      F.QR_CODE,F.DATA_MATRIX,F.AZTEC,F.PDF_417,
+      F.CODE_128,F.CODE_39,F.CODE_93,F.CODABAR,
+      F.EAN_13,F.EAN_8,F.ITF,F.UPC_A,F.UPC_E
+    ].filter(Boolean);
+    if(!formats.length)return undefined;
+    const hints=new Map();
+    hints.set(ZX.DecodeHintType.POSSIBLE_FORMATS,formats);
+    return hints;
+  }catch(e){return undefined}
+}
+function stopNativeBarcodeCamera(){
+  if(scanNativeTimer){clearInterval(scanNativeTimer);scanNativeTimer=null}
+  if(scanNativeStream){try{scanNativeStream.getTracks().forEach(t=>t.stop())}catch(e){};scanNativeStream=null}
+}
+async function startNativeBarcodeCamera(video){
+  if(!('BarcodeDetector' in window)||!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)return false;
+  let supported=[];
+  try{supported=await window.BarcodeDetector.getSupportedFormats()}catch(e){}
+  const preferred=['qr_code','data_matrix','aztec','pdf417','code_128','code_39','code_93','codabar','ean_13','ean_8','itf','upc_a','upc_e'];
+  const formats=preferred.filter(f=>!supported.length||supported.includes(f));
+  if(!formats.length)return false;
+  const detector=new window.BarcodeDetector({formats});
+  const stream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:'environment'},width:{ideal:1280},height:{ideal:720}}});
+  scanNativeStream=stream;
+  video.srcObject=stream;
+  video.setAttribute('playsinline','true');
+  await video.play();
+  scanCameraControls={stop:stopNativeBarcodeCamera};
+  scanNativeTimer=setInterval(async()=>{
+    if(!scanCameraActive||scanCameraProcessing||video.readyState<2)return;
+    try{
+      const codes=await detector.detect(video);
+      if(codes&&codes.length&&codes[0].rawValue)handleCameraDecoded(codes[0].rawValue);
+    }catch(e){}
+  },220);
+  return true;
+}
 function stopScanCamera(){
   scanCameraActive=false;
   scanCameraProcessing=false;
   try{if(scanCameraControls&&typeof scanCameraControls.stop==='function')scanCameraControls.stop()}catch(e){}
+  stopNativeBarcodeCamera();
   try{if(scanCodeReader&&typeof scanCodeReader.reset==='function')scanCodeReader.reset()}catch(e){}
   const video=$('scanCameraVideo');
   try{if(video&&video.srcObject){video.srcObject.getTracks().forEach(t=>t.stop());video.srcObject=null}}catch(e){}
@@ -292,10 +383,15 @@ async function startScanCamera(){
   box.classList.add('on');
   setScanCameraStatus('Đang mở camera sau...');
   try{
-    const ZX=window.ZXingBrowser;
-    if(!ZX||!ZX.BrowserMultiFormatReader)throw new Error('Chưa tải được thư viện ZXing. Kiểm tra mạng rồi mở lại web.');
-    scanCodeReader=new ZX.BrowserMultiFormatReader();
     scanCameraActive=true;
+    if(await startNativeBarcodeCamera(video)){
+      setScanCameraStatus('Camera đang quét bằng trình duyệt... đưa QR / 1D / 2D vào khung','ok');
+      return;
+    }
+    const ZX=await ensureZxingApi();
+    if(!ZX||!ZX.BrowserMultiFormatReader)throw new Error('Chưa tải được thư viện quét mã. Đổi mạng hoặc tải lại web rồi bấm Camera quét lại.');
+    const hints=makeZxingHints(ZX);
+    scanCodeReader=hints?new ZX.BrowserMultiFormatReader(hints):new ZX.BrowserMultiFormatReader();
     const callback=(result,err,controls)=>{
       if(result){
         const text=typeof result.getText==='function'?result.getText():String(result.text||result);
@@ -307,7 +403,7 @@ async function startScanCamera(){
     }else{
       scanCameraControls=await scanCodeReader.decodeFromVideoDevice(undefined,video,callback);
     }
-    setScanCameraStatus('Camera đang quét... đưa QR / 1D / 2D vào khung','ok');
+    setScanCameraStatus('Camera đang quét bằng ZXing... đưa QR / 1D / 2D vào khung','ok');
   }catch(e){
     scanCameraActive=false;
     setScanCameraStatus(`Không mở được camera: ${e.message}`,'err');
