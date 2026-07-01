@@ -14,12 +14,12 @@
     :root{--blue:#0b5fa5;--red:#c1121f;--line:#9ca3af;--bg:#eef2f5;--yellow:#fff6bf;--duoi:#eef7ff;--tren:#fff5df}
     body{margin:0;font-family:Arial,Helvetica,Tahoma,sans-serif;background:var(--bg);color:#111827;font-size:16px;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
     .app{width:100%;max-width:none;margin:0 auto;padding:7px}
-    .topbar{display:grid;grid-template-columns:280px 1fr 430px;gap:8px;align-items:center;margin-bottom:7px}
+    .topbar{display:grid;grid-template-columns:280px 1fr auto;gap:8px;align-items:center;margin-bottom:7px}
     .dateBox{background:#ffeb3b;border:1px solid #c8ba00;text-align:center;font-size:22px;font-weight:800;padding:9px 5px;min-height:46px;border-radius:8px}
     .tabs{display:flex;align-items:center;justify-content:center;gap:14px;background:#fff;border:1px solid #cbd5e1;min-height:46px;border-radius:8px}
     .tabBtn{border:0;background:transparent;font-size:21px;font-weight:800;cursor:pointer;padding:7px 18px;color:#315c8b;border-radius:7px}
     .tabBtn.active{color:#fff;background:var(--blue);box-shadow:inset 0 -3px 0 var(--red)}
-    .authBox{background:#fff;border:1px solid #cbd5e1;padding:6px 8px;display:flex;gap:6px;align-items:center;justify-content:flex-end;min-height:46px;border-radius:8px;flex-wrap:wrap}
+    .authBox{background:#fff;border:1px solid #cbd5e1;padding:5px 8px;display:flex;gap:6px;align-items:center;justify-content:flex-end;min-height:42px;border-radius:8px;flex-wrap:nowrap;white-space:nowrap;min-width:500px;overflow:hidden}.authBox button{padding:6px 9px;font-size:14px}.authBox #loginStatus{max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:inline-block}
     button,.btn{border:1px solid var(--line);background:#fff;border-radius:7px;padding:8px 11px;cursor:pointer;font-size:15px;font-weight:700;white-space:nowrap}
     button:hover,.btn:hover{background:#eef7ff} button.primary{background:#e6f4ff;border-color:#3483c9;color:#064c83} button.danger{background:#fff0f0;border-color:#d33;color:#a40000} button.green{background:#edffe9;border-color:#54a34f;color:#196819} button.warn{background:#fff8dd;border-color:#d0a700;color:#7a5200} button.active,.digitBtn.on{background:var(--blue)!important;color:#fff!important;border-color:var(--blue)!important} button:disabled{opacity:.45;cursor:not-allowed}
     input,select,textarea{border:1px solid #a9b2bd;border-radius:6px;padding:7px;font-size:15px;background:#fff} .smallInput{width:88px}.wideInput{width:230px}.hidden{display:none!important}.muted{color:#64748b;font-size:12px}
@@ -57,7 +57,7 @@
     #hangtraPage .returnTypeCell{font-weight:700;text-align:center;white-space:nowrap}
     #hangtraPage .returnActionBtns{gap:0!important;justify-content:center!important}
     #hangtraPage .returnActionBtns button{padding:3px 6px!important;font-size:13px!important}
-    @media (max-width:760px){body{background:#fff}.app{padding:4px}.topbar{grid-template-columns:1fr;gap:4px}.dateBox{font-size:20px}.tabs{gap:8px}.tabBtn{font-size:20px}.authBox{justify-content:center}.bar{font-size:12px;gap:5px}.sessionSelect{min-width:100%;max-width:100%}.mainGrid{grid-template-columns:1fr}.panel{min-height:0}.stockPreview{height:220px}.filters{gap:5px;padding:6px}.multiBtn{height:36px;min-width:88px;font-size:13px;padding:6px 7px}.stats{grid-template-columns:repeat(2,1fr)}.mobileFilteredInfo{display:block;padding:6px 8px;border-bottom:1px solid #e5e7eb;background:#fff;color:#0b5fa5;font-size:14px;font-weight:800;text-align:right}.tableWrap{height:calc(100vh - 300px);min-height:360px}.checkTable th,.checkTable td{font-size:15px;padding:4px 3px}.checkTable td.codeCell{min-width:185px;font-size:20px}.qtyBox input{width:58px}.noteInput{min-width:110px}.lgTableBox{height:calc(100vh - 220px);min-height:430px}.lgTable th{font-size:15px}.lgTable td{font-size:14px}.loginCard{width:100%}.staffGrid{grid-template-columns:repeat(2,1fr)}body.compact-mode{overflow:hidden!important;height:100vh}body.compact-mode .stats{display:none!important}body.compact-mode .app{height:100vh;overflow:hidden}body.compact-mode .panelTitle{padding:5px;font-size:15px}body.compact-mode .tableWrap{height:calc(100vh - 150px)!important;min-height:0;overflow:auto!important}#zoomLockBtn{display:block}.bottomSpacer td{height:260px!important}.mobileBlankRow{display:table-row!important}body.compact-mode .pager{display:none!important}body.compact-mode .mainGrid,body.compact-mode .panel{height:100vh;overflow:hidden}.filterLineBreak{display:none}.scanGrid{grid-template-columns:1fr;padding:5px}.scanTableBox{height:calc(100vh - 240px);min-height:380px}.scanToolbar{gap:5px;padding:6px}.scanPreview{max-height:95px}.scanMasterTableBox{height:260px;min-height:220px}.scanStats{grid-template-columns:repeat(3,1fr)}.cameraScanBtn{display:inline-block}.scanCameraVideo{max-height:260px}.scanToast{display:none!important}.scanBigNotice{left:50%;right:auto;top:50%;transform:translate(-50%,-50%);min-width:92vw;max-width:96vw;font-size:28px;padding:28px 24px}.scanNoticeHead{font-size:32px}.scanNoticeHead button{font-size:17px;padding:9px 14px}.scanBigNotice .scanNoticeCode{font-size:42px}.scanBigNotice .scanNoticeDetail{font-size:28px}.scanCountdownNum{font-size:86px}.scanCountdownLabel{font-size:20px}.scanCountdownUnit{font-size:22px}.scanTempItem{grid-template-columns:68px 1fr 78px;font-size:13px}.scanTempCode{font-size:16px}body.compact-mode #scanPage .scanMasterBox{display:none!important}body.compact-mode #scanPage .scanGrid{grid-template-columns:1fr!important}body.compact-mode #scanPage .scanTableBox{height:calc(100vh - 185px)!important;min-height:0!important}.scanRowTime{display:none}.scanRowActions{display:flex;gap:3px;justify-content:center;align-items:center;white-space:nowrap}.scanRowActions button{padding:4px 6px;font-size:13px}}
+    @media (max-width:760px){body{background:#fff}.app{padding:4px}.topbar{grid-template-columns:1fr;gap:4px}.dateBox{font-size:20px}.tabs{gap:8px}.tabBtn{font-size:20px}.authBox{justify-content:center;min-width:0;flex-wrap:wrap}.bar{font-size:12px;gap:5px}.sessionSelect{min-width:100%;max-width:100%}.mainGrid{grid-template-columns:1fr}.panel{min-height:0}.stockPreview{height:220px}.filters{gap:5px;padding:6px}.multiBtn{height:36px;min-width:88px;font-size:13px;padding:6px 7px}.stats{grid-template-columns:repeat(2,1fr)}.mobileFilteredInfo{display:block;padding:6px 8px;border-bottom:1px solid #e5e7eb;background:#fff;color:#0b5fa5;font-size:14px;font-weight:800;text-align:right}.tableWrap{height:calc(100vh - 300px);min-height:360px}.checkTable th,.checkTable td{font-size:15px;padding:4px 3px}.checkTable td.codeCell{min-width:185px;font-size:20px}.qtyBox input{width:58px}.noteInput{min-width:110px}.lgTableBox{height:calc(100vh - 220px);min-height:430px}.lgTable th{font-size:15px}.lgTable td{font-size:14px}.loginCard{width:100%}.staffGrid{grid-template-columns:repeat(2,1fr)}body.compact-mode{overflow:hidden!important;height:100vh}body.compact-mode .stats{display:none!important}body.compact-mode .app{height:100vh;overflow:hidden}body.compact-mode .panelTitle{padding:5px;font-size:15px}body.compact-mode .tableWrap{height:calc(100vh - 150px)!important;min-height:0;overflow:auto!important}#zoomLockBtn{display:block}.bottomSpacer td{height:260px!important}.mobileBlankRow{display:table-row!important}body.compact-mode .pager{display:none!important}body.compact-mode .mainGrid,body.compact-mode .panel{height:100vh;overflow:hidden}.filterLineBreak{display:none}.scanGrid{grid-template-columns:1fr;padding:5px}.scanTableBox{height:calc(100vh - 240px);min-height:380px}.scanToolbar{gap:5px;padding:6px}.scanPreview{max-height:95px}.scanMasterTableBox{height:260px;min-height:220px}.scanStats{grid-template-columns:repeat(3,1fr)}.cameraScanBtn{display:inline-block}.scanCameraVideo{max-height:260px}.scanToast{display:none!important}.scanBigNotice{left:50%;right:auto;top:50%;transform:translate(-50%,-50%);min-width:92vw;max-width:96vw;font-size:28px;padding:28px 24px}.scanNoticeHead{font-size:32px}.scanNoticeHead button{font-size:17px;padding:9px 14px}.scanBigNotice .scanNoticeCode{font-size:42px}.scanBigNotice .scanNoticeDetail{font-size:28px}.scanCountdownNum{font-size:86px}.scanCountdownLabel{font-size:20px}.scanCountdownUnit{font-size:22px}.scanTempItem{grid-template-columns:68px 1fr 78px;font-size:13px}.scanTempCode{font-size:16px}body.compact-mode #scanPage .scanMasterBox{display:none!important}body.compact-mode #scanPage .scanGrid{grid-template-columns:1fr!important}body.compact-mode #scanPage .scanTableBox{height:calc(100vh - 185px)!important;min-height:0!important}.scanRowTime{display:none}.scanRowActions{display:flex;gap:3px;justify-content:center;align-items:center;white-space:nowrap}.scanRowActions button{padding:4px 6px;font-size:13px}}
   
 
     #hangtraPage .returnPanelTools button{padding:5px 8px!important;font-size:13px!important}
@@ -202,6 +202,82 @@ function canEdit(){return !!appUser && !isViewOnly()}
 function canUploadDelete(){return isAdmin()}
 function canManageStaff(){return isAdmin()}
 function roleLabel(){if(!appUser)return '';if(isAdmin())return 'Admin';return currentStaffMode()==='view'?'Chỉ xem':'Thao tác'}
+
+function normalizeStaffPermissions(obj){
+  const base=clone(APP_CONFIG.defaultStaff||{});
+  let out={};
+  if(obj&&typeof obj==='object'){
+    if(Array.isArray(obj)){
+      obj.forEach((x,i)=>{const name=String(x?.name||'').trim();if(name)out[name]={mode:x.mode==='view'?'view':'edit',order:x.order||i+1}});
+    }else{
+      Object.entries(obj).forEach(([name,val],i)=>{name=String(name||'').trim();if(!name)return;out[name]={mode:(val&&val.mode)==='view'?'view':'edit',order:(val&&val.order)||i+1}});
+    }
+  }
+  if(!Object.keys(out).length)out=base;
+  Object.entries(base).forEach(([name,val])=>{if(!out[name])out[name]=val});
+  return out;
+}
+async function loadStaffSettings(){
+  try{
+    const remote=await fbGet(`${APP_CONFIG.root}/settings/staffPermissions`);
+    state.staffPermissions=normalizeStaffPermissions(remote);
+  }catch(e){
+    state.staffPermissions=normalizeStaffPermissions(state.staffPermissions||APP_CONFIG.defaultStaff);
+    console.warn('loadStaffSettings fallback:',e&&e.message?e.message:e);
+  }
+  renderStaffButtons();
+  return state.staffPermissions;
+}
+function orderedStaffEntries(){
+  return Object.entries(state.staffPermissions||{}).sort((a,b)=>(toNum(a[1]?.order)||999)-(toNum(b[1]?.order)||999)||String(a[0]).localeCompare(String(b[0]),'vi'));
+}
+function renderStaffButtons(){
+  const box=$('staffGrid');if(!box)return;
+  const rows=orderedStaffEntries();
+  box.innerHTML=rows.length?rows.map(([name,info])=>`<button type="button" data-staff="${escapeAttr(name)}">${escapeHtml(name)}${info?.mode==='view'?'<br><span style="font-size:12px;color:#b45309">Chỉ xem</span>':''}</button>`).join(''):'<div class="muted">Chưa có nhân viên.</div>';
+}
+function renderStaffPermissionModal(){
+  const body=$('staffPermBody');if(!body)return;
+  body.innerHTML=orderedStaffEntries().map(([name,info],idx)=>`<tr data-staff-row="${escapeAttr(name)}"><td><input data-staff-name value="${escapeAttr(name)}"></td><td><select data-staff-mode><option value="edit" ${info?.mode==='view'?'':'selected'}>Được thao tác</option><option value="view" ${info?.mode==='view'?'selected':''}>Chỉ xem</option></select></td><td><button class="danger" data-delete-staff="${escapeAttr(name)}">Xóa</button></td></tr>`).join('');
+}
+function collectStaffPermissionsFromModal(){
+  const out={};
+  [...$('staffPermBody').querySelectorAll('tr')].forEach((tr,idx)=>{
+    const name=String(tr.querySelector('[data-staff-name]')?.value||'').trim();
+    if(!name)return;
+    const mode=tr.querySelector('[data-staff-mode]')?.value==='view'?'view':'edit';
+    out[name]={mode,order:idx+1};
+  });
+  return normalizeStaffPermissions(out);
+}
+async function saveStaffPermissionsFromModal(){
+  if(!canManageStaff())return alert('Chỉ Admin được set quyền nhân viên.');
+  const perms=collectStaffPermissionsFromModal();
+  state.staffPermissions=perms;
+  await fbSet(`${APP_CONFIG.root}/settings/staffPermissions`,perms);
+  renderStaffButtons();
+  renderStaffPermissionModal();
+  setMsg('Đã lưu quyền nhân viên.');
+}
+function addStaffPermission(){
+  if(!canManageStaff())return alert('Chỉ Admin được thêm nhân viên.');
+  const name=String($('newStaffName').value||'').trim();
+  if(!name)return alert('Nhập tên nhân viên.');
+  const mode=$('newStaffMode').value==='view'?'view':'edit';
+  const current=collectStaffPermissionsFromModal();
+  current[name]={mode,order:Object.keys(current).length+1};
+  state.staffPermissions=current;
+  $('newStaffName').value='';
+  renderStaffPermissionModal();
+}
+function deleteStaffPermission(name){
+  if(!canManageStaff())return alert('Chỉ Admin được xóa nhân viên.');
+  const current=collectStaffPermissionsFromModal();
+  delete current[name];
+  state.staffPermissions=normalizeStaffPermissions(current);
+  renderStaffPermissionModal();
+}
+
 function updateLoginModalMode(mode){
   const title=$('loginModalTitle'), google=$('googleLoginBtn'), box=$('staffChooseBox'), hint=$('loginHint');
   if(!title||!google||!box)return;
@@ -217,7 +293,6 @@ async function loginGoogle(){
   try{
     await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
     const provider=new firebase.auth.GoogleAuthProvider();
-    provider.setCustomParameters({prompt:'select_account'});
     const res=await auth.signInWithPopup(provider);
     await finishFirebaseLogin(res.user,{forceStaffPick:true});
   }catch(e){
